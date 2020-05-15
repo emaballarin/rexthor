@@ -1,0 +1,79 @@
+---
+title: "SMDS Homework - Block 4"
+author: "P. Morichetti, M. Rispoli, A. Cicchini and E. Ballarin  |  Group 'C'"
+date: "27th May 2020"
+output:
+  html_document:
+    theme: darkly
+    highlight: breezedark
+    mathjax: default
+    self_contained: true
+    md_extensions: +autolink_bare_uris
+    toc: true
+    toc_collapsed: false
+    toc_float: true
+    toc_depth: 3
+    number_sections: false
+header-includes:
+- \usepackage{color}
+- \usepackage{graphicx}
+- \usepackage{grffile}
+institute: University of Trieste, SISSA, ICTP, University of Udine
+graphics: yes
+fontsize: 10pt
+---
+
+```{r global_options, include=FALSE}
+knitr::opts_chunk$set(fig.align = 'center', warning=FALSE, message=FALSE, fig.asp=0.625, dev='png', global.par = TRUE, dev.args=list(pointsize=10), fig.path = 'figs/')
+```
+
+```{r setup, include=FALSE}
+library(knitr)
+local({
+  hook_plot = knit_hooks$get('plot')
+  knit_hooks$set(plot = function(x, options) {
+    paste0('\n\n----\n\n', hook_plot(x, options))
+  })
+})
+```
+
+
+# Exercises from *DAAG*
+
+
+## Exercise 1
+
+### Text
+
+Pippo.
+
+### Solution
+
+Pluto.
+
+# Some code...
+```{r lec_01, code = readLines("src/lec_01.R"), echo=TRUE}
+```
+
+### Comments
+
+Paperino.
+
+
+## Exercise 2
+
+### Text
+
+Pippo.
+
+### Solution
+
+Pluto.
+
+# Some code...
+```{r lec_01, code = readLines("src/lec_01.R"), echo=TRUE}
+```
+
+### Comments
+
+Paperino.
