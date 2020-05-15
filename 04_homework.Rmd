@@ -51,7 +51,7 @@ Pippo.
 
 Pluto.
 
-# Some code...
+<!-- # Some code... -->
 ```{r lec_01, code = readLines("src/lec_01.R"), echo=TRUE}
 ```
 
@@ -70,7 +70,7 @@ Pippo.
 
 Pluto.
 
-# Some code...
+<!-- # Some code... -->
 ```{r lec_01, code = readLines("src/lec_01.R"), echo=TRUE}
 ```
 
