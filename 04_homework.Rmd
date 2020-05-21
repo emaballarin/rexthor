@@ -1,6 +1,6 @@
 ---
 title: "SMDS Homework - Block 4"
-author: "P. Morichetti, M. Rispoli, A. Cicchini and E. Ballarin  |  Group 'C'"
+author: "P. Morichetti, M. Rispoli, A. Cicchini and E. Ballarin  |  Group 'B'"
 date: "27th May 2020"
 output:
   html_document:
@@ -38,42 +38,66 @@ local({
 ```
 
 
-# Exercises from *DAAG*
+# Exercises from *DAAG, Chapter 6* 
 
+## Exercise 6
+
+### Text
+
+### Solution
+
+<!-- # Some code... -->
+```{r daag6_6, code = readLines("src/daag6_6.R"), echo=TRUE}
+```
+
+<!-- # Some other code... -->
+```{r daag6_6b, code = readLines("src/daag6_6.R"), echo=TRUE}
+```
+
+## Exercise 8
+
+### Text
+
+### Solution
+
+
+## Exercise 10
+
+### Text
+
+### Solution
+
+
+## Exercise 11
+
+### Text
+
+### Solution
+
+# Exercises from *DAAG, Chapter 8* 
 
 ## Exercise 1
 
 ### Text
 
-Pippo.
-
 ### Solution
-
-Pluto.
-
-<!-- # Some code... -->
-```{r lec_01, code = readLines("src/lec_01.R"), echo=TRUE}
-```
-
-### Comments
-
-Paperino.
-
 
 ## Exercise 2
 
 ### Text
 
-Pippo.
+### Solution
+
+
+## Exercise 3
+
+### Text
 
 ### Solution
 
-Pluto.
 
-<!-- # Some code... -->
-```{r lec_01, code = readLines("src/lec_01.R"), echo=TRUE}
-```
+## Exercise 6
 
-### Comments
+### Text
 
-Paperino.
+### Solution
