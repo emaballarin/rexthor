@@ -13,6 +13,10 @@ nihills_lm2 <- lm(time ~ dist+climb+dist:climb, data=nihills)
 # ANOVA (no row removal)
 anova(nihills_lm1, nihills_lm2)
 
+# DiagPlots
+plot(nihills_lm1)
+plot(nihills_lm2)
+
 
 
 # Remove some "problematic" datapoints!
@@ -26,6 +30,10 @@ nihills_lm2_pruned <- lm(time ~ dist+climb+dist:climb, data=nihills_pruned)
 
 # ANOVA (1-row removal)
 anova(nihills_lm1_pruned, nihills_lm2_pruned)
+
+# DiagPlots
+plot(nihills_lm1_pruned)
+
 
 
 
@@ -43,6 +51,9 @@ nihills_lm2_pruned_more <- lm(time ~ dist+climb+dist:climb, data=nihills_pruned)
 
 # ANOVA (2-row removal)
 anova(nihills_lm1_pruned_more, nihills_lm2_pruned_more)
+
+# DiagPlots
+plot(nihills_lm1_pruned_more)
 
 
 
