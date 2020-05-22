@@ -46,20 +46,19 @@ local({
 
 ### Solution
 
-<!-- # Some code... -->
-```{r daag6_6, code = readLines("src/daag6_6.R"), echo=TRUE}
-```
-
-<!-- # Some other code... -->
-```{r daag6_6b, code = readLines("src/daag6_6.R"), echo=TRUE}
-```
-
 ## Exercise 8
 
 ### Text
 
+Apply the `lm.ridge()` function to the `litters` data, using the generalized cross-validation (GCV) criterion to choose the tuning parameter. (GCV is an approximation to cross-validation.)
+
+a. In particular, estimate the coefficients of the model relating `brainwt` to `bodywt` and `lsize` and compare with the results obtained using `lm()`.  
+b. Using both ridge and ordinary regression, estimate the mean brain weight when litter size is 10 and body weight is 7. Use the bootstrap, with case-resampling, to compute approximate 95% percentile confidence intervals using each method. Compare with the interval obtained using `predict.lm()`.
+
 ### Solution
 
+```{r daag6_6b,code = readLines("src/daag6_8.R"), echo=TRUE}
+```
 
 ## Exercise 10
 
