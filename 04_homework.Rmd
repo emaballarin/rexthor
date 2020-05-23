@@ -47,12 +47,13 @@ local({
 ### Solution
 
 <!-- # Some code... -->
-```{r daag6_6, code = readLines("src/daag6_6.R"), echo=TRUE}
+```{r daag6_6, code = readLines("src/DAAG_06_06.R"), echo=TRUE}
 ```
 
-<!-- # Some other code... -->
-```{r daag6_6b, code = readLines("src/daag6_6.R"), echo=TRUE}
-```
+### Comments
+<!-- TODO -->
+Text to be written. Please leave it here!
+
 
 ## Exercise 8
 
@@ -101,3 +102,11 @@ local({
 ### Text
 
 ### Solution
+```{r daag6_6, code = readLines("src/DAAG_08_06.R"), echo=TRUE}
+```
+
+### Comments
+<!-- TODO -->
+Text to be written. Please leave it here!
+
+<!-- LEAVE A NEWLINE AT THE END-OF-FILE! -->
