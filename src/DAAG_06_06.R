@@ -14,7 +14,10 @@ nihills_lm2 <- lm(time ~ dist+climb+dist:climb, data=nihills)
 anova(nihills_lm1, nihills_lm2)
 
 # DiagPlots
+par(mfrow=c(2,2))
 plot(nihills_lm1)
+
+par(mfrow=c(2,2))
 plot(nihills_lm2)
 
 
@@ -32,8 +35,11 @@ nihills_lm2_pruned <- lm(time ~ dist+climb+dist:climb, data=nihills_pruned)
 anova(nihills_lm1_pruned, nihills_lm2_pruned)
 
 # DiagPlots
+par(mfrow=c(2,2))
 plot(nihills_lm1_pruned)
 
+par(mfrow=c(2,2))
+plot(nihills_lm2_pruned)
 
 
 
@@ -46,15 +52,12 @@ nihills_pruned_more <- nihills[!(row.names(nihills) %in% rows_to_remove),]
 
 
 # Fit models (2-row removal)
-nihills_lm1_pruned_more <- lm(time ~ dist+climb,            data=nihills_pruned)
-nihills_lm2_pruned_more <- lm(time ~ dist+climb+dist:climb, data=nihills_pruned)
+nihills_lm1_pruned_more <- lm(time ~ dist+climb,            data=nihills_pruned_more)
+nihills_lm2_pruned_more <- lm(time ~ dist+climb+dist:climb, data=nihills_pruned_more)
 
 # ANOVA (2-row removal)
 anova(nihills_lm1_pruned_more, nihills_lm2_pruned_more)
 
 # DiagPlots
+par(mfrow=c(2,2))
 plot(nihills_lm1_pruned_more)
-
-
-
-# MEMENTO: Logarithmic transform is your friend.
