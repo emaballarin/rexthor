@@ -57,8 +57,126 @@ b. Using both ridge and ordinary regression, estimate the mean brain weight when
 
 ### Solution
 
-```{r daag6_6b,code = readLines("src/daag6_8.R"), echo=TRUE}
+Let's begin by taking a quick look at the data
+
+```{r daag6_8a, echo=TRUE}
+library(DAAG)
+library(MASS) #for lm.ridge()
+
+head(litters)
+plot(litters)
 ```
+
+From the basic plot we can immediately tell that
+- `brainwt` is positively correlated to `bodywt` and negatively correlated to `lsize`, although the correlation appears to be very noisy;
+- There's a significative negative correlation between `bodywt` and `lsize`;
+
+
+we may expect some problems arising from the collinearity underlined in the second bullet when fitting `brainwt` w.r.t. `bodywt` and `lsize`.
+
+Let's see how the linear model and ridge regression do:
+
+```{r daag6_8b,echo=TRUE}
+
+# fit the vanilla linear model
+litters.lm = lm(brainwt~bodywt+lsize, data=litters)
+summary(litters.lm)
+
+# fit the ridge linear regression (selecting lambda by GCV)
+select(lm.ridge(brainwt~bodywt+lsize, data=litters,
+                lambda = seq(0,1,0.001)))
+best.lambda = .118
+litters.ridge = lm.ridge(brainwt~bodywt+lsize, data=litters,
+                         lambda=best.lambda)
+litters.ridge
+
+
+# estimate train MSE for comparing the models
+
+# function that computes the predictions of a lm.ridge() model
+predridge <- function(model = litters.ridge, littersdf = litters){
+  coeffs = coef(model)
+  return(coeffs[1] + coeffs[2] * littersdf$bodywt + coeffs[3] * littersdf$lsize)
+}
+
+litters.ridge.residuals <- litters$brainwt - predridge()
+
+print(paste("lm MSE: ",
+            sum(litters.lm$residuals**2) / length(litters.lm$residuals)))
+print(paste("ridge MSE: ",
+            sum(litters.ridge.residuals**2) / length(litters.ridge.residuals)))
+
+```
+The coefficients estimated in ridge regression for both predictors are slightly smaller than those fitted by the linear model without regolarization, while the intercept's value increases a bit. 
+
+The difference in MSE is very small, still linear regression appears to perform better on the trained samples, suggesting that our worries for multicollinearity were not solved by ridge regression.
+
+Let's now check our models' prediction on a the novel sample $(7,10)$. We'll also estimate the studentized bootstrap 95% confidence interval for both methods for the sample and compare them with the 95% CI reported by `lm()`:
+
+
+```{r daag6_8.c, echo=TRUE}
+
+# estimate models on the new datapoint
+newpoint = data.frame(bodywt=7, lsize=10)
+
+yhat.lm <- predict(litters.lm, newdata = newpoint)
+yhat.ridge <- predridge(litters.ridge,newpoint)
+
+
+# estimate studentized bootstrap CI for lm and lm.ridge at newpoint
+
+n <- nrow(litters)
+B = 1000
+
+lm.zb = 1:B
+ridge.zb = 1:B
+
+for(b in 1:B){
+  idxs = sample (1:n,n, replace = TRUE)
+  bootdf = litters[idxs,]
+  
+  b_lm = lm(brainwt~ bodywt + lsize, data = bootdf)
+  yhat.b_lm <- predict(b_lm, newdata = newpoint)
+  se.b_lm <- sd(b_lm$fitted.values)
+  lm.zb[b] <- (yhat.b_lm - yhat.lm)/se.b_lm
+  
+  b_ridge = lm.ridge(brainwt~ bodywt + lsize, data = bootdf, lambda = best.lambda)
+  yhat.b_ridge = predridge(b_ridge, newpoint)
+  se.b_ridge = sd(predridge(b_ridge,bootdf))
+  ridge.zb[b] <- (yhat.b_ridge - yhat.ridge)/se.b_ridge
+}
+
+se.lm <- sd(litters.lm$fitted.values)
+se.ridge <- sd(predridge())
+
+lm.bquants = quantile(lm.zb,probs=c(0.975,0.025))
+lm.ci = yhat.lm - se.lm*lm.bquants
+
+ridge.bquants = quantile(ridge.zb,probs=c(0.975,0.025))
+ridge.ci = yhat.ridge - se.ridge*ridge.bquants
+
+print("lm estimate + bootstrap 95% CI:")
+print(paste(yhat.lm, "(", lm.ci[1],",",lm.ci[2],")"))
+
+print("ridge estimate + bootstrap 95% CI:")
+print(paste(yhat.ridge, "(", ridge.ci[1],",",ridge.ci[2],")"))
+
+print("lm() estimate and CI")
+predict(litters.lm, newdata = newpoint,interval="confidence", level=.95)
+
+lm.cibase = predict(litters.lm, newdata = newpoint,interval="confidence", level=.95)[2:3]
+
+#plot the three intervals 
+plot(as.factor(c("lm+bs","lm+wald","ridge+bs")),c(yhat.lm,yhat.lm,yhat.ridge),       
+     ylim=c(.4,.43))
+
+lines(c(1,1),lm.ci, col="red")
+lines(c(2,2),lm.cibase, col="red")
+lines(c(3,3),ridge.ci, col="red")
+
+```
+
+We can see from the graph that the confidence intervals estimated are very close. Notice that, as expected, the boostrap estimated confidence intervals are asymmetric.
 
 ## Exercise 10
 
