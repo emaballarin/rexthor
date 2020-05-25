@@ -46,6 +46,41 @@ local({
 
 ### Solution
 
+<!-- # Some code... -->
+```{r daag_06_06, code = readLines("src/DAAG_06_06.R"), echo=TRUE}
+```
+
+### Comments
+
+After having fit both *Model 1* (i.e. the linear model that tries to explain record `time` for male athletes from the `dist`ance and `climb` variables, without considering the interaction term) and *Model 1* (the one considering also interaction between `dist` and `climb`) on the entire, untransformed, `nihills` dataset, we can look at *Fisher-test ANOVA* for model selection, being *Model 1* nested inside *Model 2*.  
+
+With a value of $F = 72.406$ and a *p-value* $<10^{-7}$ *Model 2* is evidently (according to the *F-test*) the model of choice in such setting.  
+
+Upon inspection, however, it appears clear that the relatively poor behaviour of *Model 1* as opposed to *Model 2* is strongly determined by the influence of few data-points.  
+
+In fact, considering for the moment *Model 1*:
+
+- From the *Residuals vs Fitted* graph, it appears clearly that tracks *Seven Sevens* and *Annalong Horseshoe* have both highest residuals (though of opposite sign) and highest fitted values. This evidence of heteroscedasticity is further confirmed by the *Scale-Location* plot.  
+- From the *Residuals vs Leverage* plot we know that the *Seven Sevens* track is also a potential influential point.
+
+Now, looking at *Model 2*, we can see that:
+- The *Seven Sevens* track has become one of the datapoints with the smallest residuals.  
+- Such datapoint still exhibits high leverage and is a candidate to be an influential point.  
+
+We can therefore conclude that the additional interaction term mainly serves the purpose of correcting the model for taking into account the appearantly *strange* behaviour of *Seven Sevens* in *Model 1*.  
+
+We try to re-fit the model on the (still, untransformed) `nihills` dataset, after removal of the *Seven Sevens* datapoint.  
+
+This time, *Fisher-test ANOVA* suggests to avoid the additional interaction term, proving our assumption as probably correct.  
+
+Now, at the price of some additional non-normality even at central quantiles, and without solving the still present problem of heteroscedasticity, the model is less determined by influence of single-datapoints.  
+
+Still, what previously observed for the *Seven Sevens* track can now be found -- even if with a smaller effect overall -- w.r.t. the *Annalong Horseshoe*.  
+
+Repeating the fit with the dataset additionally devoid of the *Annalong Horseshoe* datapoint, here-evidenced conclusions are even more amplified: *Annalong Horseshoe* was an influential point even in the latter case.  
+
+The interesting point to be noted with such regard is that -- being the *Seven Sevens* and *Annalong Horseshoe* datapoints those whose outlying *time* value is the farthest from the linear trends *time/dist* and *time/climb* -- the lack of proper logarithmic transform of the dataset both produces inaccurate models and also tricks the analyst into preferring an over-parametrized model whose effest is just to amplify the importance of outlying value(s).
+
 ## Exercise 8
 
 ### Text
@@ -114,7 +149,7 @@ The difference in MSE is very small, still linear regression appears to perform 
 Let's now check our models' prediction on a the novel sample $(7,10)$. We'll also estimate the studentized bootstrap 95% confidence interval for both methods for the sample and compare them with the 95% CI reported by `lm()`:
 
 
-```{r daag6_8.c, echo=TRUE}
+```{r daag6_8c, echo=TRUE}
 
 # estimate models on the new datapoint
 newpoint = data.frame(bodywt=7, lsize=10)
@@ -183,7 +218,12 @@ We can see from the graph that the confidence intervals estimated are very close
 ### Text
 
 ### Solution
+```{r daag06_10, code = readLines("src/DAAG_06_10.R"), echo=TRUE}
+```
 
+### Comments
+<!-- TODO: Michele Rispoli -->
+Something...
 
 ## Exercise 11
 
@@ -218,3 +258,11 @@ We can see from the graph that the confidence intervals estimated are very close
 ### Text
 
 ### Solution
+```{r daag08_06, code = readLines("src/DAAG_08_06.R"), echo=TRUE}
+```
+
+### Comments
+<!-- TODO -->
+Text to be written. Please leave it here!
+
+<!-- LEAVE A NEWLINE AT THE END-OF-FILE! -->
