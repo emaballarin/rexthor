@@ -5,6 +5,10 @@ library(lattice)
 
 dataset <- table.b3
 
+# exploring data
+str(dataset)
+summary(dataset)
+
 plot_fit <- function(fitted_model, x, y, xlab, subtitle){
     plot(x, y, main = "fitted model", xlab = xlab, sub = subtitle)
   lines(x, as.vector(fitted_model$fitted.values), col ="red")

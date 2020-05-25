@@ -5,7 +5,7 @@ date: "27th May 2020"
 output:
   html_document:
     theme: darkly
-    highlight: breezedark
+ #   highlight: breezedark
     mathjax: default
     self_contained: true
     md_extensions: +autolink_bare_uris
@@ -191,9 +191,11 @@ In the data set (an artificial one of 3121 patients, that is similar to a subset
 ```{r daag06_10, code = readLines("src/DAAG_08_02.R"), echo=TRUE}
 ```
 
-Almost all of the independent variables are highly significant according to the p-values and the more effective variables have an inpact on the output of two times the value of the variable itself (i.e. betahat_i is approximative equals to 2, than y_i = ...+ 2 * x_i + ...).
+### Comments
 
-The difference between Null model and the current one is quite large so it's good, infact computing: 1 - pchisq(1741.6 - 1201.3, 3120 - 3110) = 0 and it means there is evidence against the null hyphotesis i.e. to peek the model with just a costant value.
+Almost all of the independent variables are highly significant according to the p-values and the more effective variables have an impact on the output of two times the assumed value of the variable itself (i.e. betahat_i is approximately equals to 2, than y_i = …+ 2 * x_i + …).
+
+The difference between Null model and the current one is quite large so it’s good, in fact 1 - pchisq(1741.6 - 1201.3, 3120 - 3110) = 0 and it means there is evidence against the null hypothesis i.e. to pick the model with just a constant value.
 
 ## Exercise 3
 

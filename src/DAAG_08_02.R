@@ -1,11 +1,9 @@
-# ex 2
-
 library(DAAG)
 
 # load dataset
 data <- head.injury
 
-# exploiting data
+# exploring data
 str(data)
 summary(data)
 
