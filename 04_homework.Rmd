@@ -44,42 +44,56 @@ local({
 
 ### Text
 
+The following code snippet investigates the consequences of not using a logarithmic transformation for the `nihills` dataset analysis.  
+
+The second model differs from the first in having a $\mathsf{dist} \times \mathsf{climb}$ interaction term, additional to linear terms in $\mathsf{dist}$ and $\mathsf{climb}$.  
+
+(a) Fit the two models:  
+`nihills.lm  <- lm(time ~ dist+climb, data=nihills)`  
+`nihills2.lm <- lm(time ~ dist+climb+dist:climb, data=nihills)`  
+`anova(nihills.lm, nihills2.lm)`  
+
+(b) Using the F-test result, make a tentative choice of model, and proceed to examine diagnostic plots.  
+Are there any problematic observations? What happens if these points are removed?  
+
+Refit both of the above models, and check the diagnostics again.
+
+
 ### Solution
 
-<!-- # Some code... -->
 ```{r daag_06_06, code = readLines("src/DAAG_06_06.R"), echo=TRUE}
 ```
 
 ### Comments
 
-After having fit both *Model 1* (i.e. the linear model that tries to explain record `time` for male athletes from the `dist`ance and `climb` variables, without considering the interaction term) and *Model 1* (the one considering also interaction between `dist` and `climb`) on the entire, untransformed, `nihills` dataset, we can look at *Fisher-test ANOVA* for model selection, being *Model 1* nested inside *Model 2*.  
+After having fit both *Model 1* (i.e. the linear model that tries to explain record `time` for male athletes from the `dist`ance and `climb` variables, without considering the interaction term) and *Model 2* (the one considering also interaction between `dist` and `climb`) on the entire, un-transformed, `nihills` dataset, we can look at *Fisher-test ANOVA* for model selection, being *Model 1* nested inside *Model 2*.  
 
 With a value of $F = 72.406$ and a *p-value* $<10^{-7}$ *Model 2* is evidently (according to the *F-test*) the model of choice in such setting.  
 
-Upon inspection, however, it appears clear that the relatively poor behaviour of *Model 1* as opposed to *Model 2* is strongly determined by the influence of few data-points.  
+Upon inspection, however, it appears clear that the relatively poor behaviour of *Model 1* as opposed to *Model 2* is strongly determined by the influence of few data-points (one, mainly!).  
 
 In fact, considering for the moment *Model 1*:
 
 - From the *Residuals vs Fitted* graph, it appears clearly that tracks *Seven Sevens* and *Annalong Horseshoe* have both highest residuals (though of opposite sign) and highest fitted values. This evidence of heteroscedasticity is further confirmed by the *Scale-Location* plot.  
-- From the *Residuals vs Leverage* plot we know that the *Seven Sevens* track is also a potential influential point.
+- From the *Residuals vs Leverage* plot we know that the *Seven Sevens* track is also a potential influential point. Such findings, together with the observation that *Seven Sevens* is the only point in the dataset with such comparably high fitted value from the model, make it a highly likely *over*-influential point in the fitted model.
 
-Now, looking at *Model 2*, we can see that:
-- The *Seven Sevens* track has become one of the datapoints with the smallest residuals.  
-- Such datapoint still exhibits high leverage and is a candidate to be an influential point.  
+Now, looking at *Model 2* diagnostic plots, we can see that:
+- The *Seven Sevens* track has become one of the datapoints with the smallest residuals, but with a fitted value comparable with that previously obtained.  
+- Such datapoint still exhibits high leverage and uniqueness among the datapoints with such high fitted value: it is still a candidate to be an *over*-influential point.  
 
-We can therefore conclude that the additional interaction term mainly serves the purpose of correcting the model for taking into account the appearantly *strange* behaviour of *Seven Sevens* in *Model 1*.  
+We can therefore conclude that the additional interaction term (and associated degree of freedom for the model) mainly serves the purpose of correcting the model behaviour for taking into account the appearantly *deviant* behaviour of *Seven Sevens* datapoint in *Model 1*.  
 
-We try to re-fit the model on the (still, untransformed) `nihills` dataset, after removal of the *Seven Sevens* datapoint.  
+For that reason, we try to re-fit the model on the (still, untransformed) `nihills` dataset, after removal of the *Seven Sevens* datapoint.  
 
-This time, *Fisher-test ANOVA* suggests to avoid the additional interaction term, proving our assumption as probably correct.  
+This time, *Fisher-test ANOVA* suggests to avoid the additional interaction term and to accept the simpler model, proving our previous assumption as probably correct.  
 
-Now, at the price of some additional non-normality even at central quantiles, and without solving the still present problem of heteroscedasticity, the model is less determined by influence of single-datapoints.  
+Now, at the price of some additional residuals-non-normality even at central quantiles, and without solving the still present problem of heteroscedasticity, the model is less *over*-determined by the influence of single-datapoints.  
 
-Still, what previously observed for the *Seven Sevens* track can now be found -- even if with a smaller effect overall -- w.r.t. the *Annalong Horseshoe*.  
+Still, the behaviour previously observed for the *Seven Sevens* datapoint can now be found -- though with a smaller effect overall -- in the behaviour of the *Annalong Horseshoe* datapoint. We still observe high (and unique) fitted value, a residual among the highest and a high Cook distance from zero.   
 
-Repeating the fit with the dataset additionally devoid of the *Annalong Horseshoe* datapoint, here-evidenced conclusions are even more amplified: *Annalong Horseshoe* was an influential point even in the latter case.  
+Repeating the fit on the dataset additionally devoided of the *Annalong Horseshoe* datapoint, previously-evidenced conclusions are even more amplified and confirmed: the final model (still, the simpler one) obtained this way is no longer *over*-determined by single datapoints and more balanced overall w.r.t. high-residual, high-leverage points.  
 
-The interesting point to be noted with such regard is that -- being the *Seven Sevens* and *Annalong Horseshoe* datapoints those whose outlying *time* value is the farthest from the linear trends *time/dist* and *time/climb* -- the lack of proper logarithmic transform of the dataset both produces inaccurate models and also tricks the analyst into preferring an over-parametrized model whose effest is just to amplify the importance of outlying value(s).
+The interesting result to be noted with such regard is that -- being the *Seven Sevens* and *Annalong Horseshoe* datapoints those whose outlying associated $\mathsf{time}$ value is the farthest from the linear trends *time/dist* and *time/climb* -- the lack of proper logarithmic transformation of the dataset both produces generally inaccurate models and also may trick the analyst into preferring an over-parametrized model whose effect is just that to amplify the importance of such *outlying* value(s).
 
 ## Exercise 8
 
@@ -302,7 +316,14 @@ While in the residual plot for the group x11 = 1, the points are all  distribute
 
 ### Text
 
+It is given the numbers of occasions when inhibition (i.e., no flow of current across a membrane) occurred within $120$s, for different concentrations of the protein *peptide-C* (data are used with the permission of Claudia Haarmann, who obtained these data in the course of her PhD research). The outcome `yes` implies that inhibition has occurred.  
+Use logistic regression to model the probability of inhibition as a function of protein concentration.
+
+
 ### Solution
+```{r daag08_01, code = readLines("src/DAAG_08_01.R"), echo=TRUE}
+```
+
 
 ## Exercise 2
 
@@ -332,12 +353,43 @@ The difference between Null model and the current one is quite large so it’s g
 
 ### Text
 
+The function $\mathsf{poissonsim()}$ allows for experimentation with *Poisson regression*.  
+In particular, $\mathsf{poissonsim()}$ can be used to simulate Poisson responses with *log-rates* equal to $a + bx$, where $a$ and $b$ are fixed values by default.  
+
+(a) Simulate $100$ Poisson responses using the model $log( \lambda) = 2 − 4x$ for $x = 0, 0.01, 0.02,\dots, 1.0$.  
+Fit a Poisson regression model to these data, and compare the estimated coefficients with the true coefficients. How well does the estimated model predict future observations?  
+
+(b) Simulate $100$ Poisson responses using the model $log( \lambda) = 2 − bx$ where $b$ is normally distributed with mean $4$ and standard deviation $5$. [Use the argument $\mathsf{slope.sd=5}$ in the $\mathsf{poissonsim()}$ function.] How do the results using the poisson and quasipoisson families differ?
+
 ### Solution
 ```{r daag08_06, code = readLines("src/DAAG_08_06.R"), echo=TRUE}
 ```
 
 ### Comments
-<!-- TODO -->
-Text to be written. Please leave it here!
+
+(a) Preliminarily to a more *in-depth* analysis, it is worth noting that -- w.r.t. to the point we are currently answering to -- we are performing a *Poisson regression* model to data generated according to a *Poisson regression* generative model.  
+
+Far from being *that* obvious, this allows us to preliminarily state that what we are trying to accomplish is *a posteriori* (information-theoretically) the most efficient fitting procedure to predict the expected counts from the only available predictor of the synthetic phenomenon we are dealing with.  
+
+A more precise consistency check involves the analysis of the *standard error* estimates (obtained by the means of the integrated fitting routine $\mathsf{glm}$) and *approximated-normal confidence intervals* obtained via *profile likelihood estimation* thanks to the `MASS::confint()` function.
+
+As we can see from the results shown above, the estimated coefficients are always included in the $95\%$ symmetric C.I.s around the estimate. This is also true for the $\text{estimate}\ \pm\ SE$ interval for the slope coefficient and sometimes also for the intercept. In cases it is not, anyway, the difference is always of minor entity.  
+
+To analyze the robustness of the fitted model for $x \rightarrow +\infty$ (i.e. *future values*) it is possible to study the (estimated) rate $\hat{\lambda}$ of the (estimated) Poisson distribution from which we assume our counts to be sampled from.  
+
+In fact, $\hat{\lambda} = e^{\hat{a} + x\hat{b}}$ and it is sufficient to consider that $\hat{a} > 0$ and $\hat{b} < 0$. Furthermore, as $x \rightarrow +\infty, \ \hat{\lambda} \rightarrow 0$ and $E_{pois}[\text{counts}] \propto \lambda$.  
+
+From that -- or also via *interval-bound propagation* -- it is possible to show that, as long as the previous inequalities hold true, the difference in predicted counts converges to zero as $x \rightarrow +\infty$ regardless of the specific value of the estimated parameters $\hat{a} > 0$ and $\hat{b} < 0$. This makes *future* estimations robust to stochastic noise.  
+
+
+(b) As far as the second phenomenon and model are concerned, the following are the similarities and differences among the *Poisson-family* and *Quasi-Poisson family* regressions.  
+
+- As expected, point-estimates for the *(quasi-)Poisson regression* coefficients are the same in both cases, since *Quasi-Poisson* regression model is the *quasi-likelihood* model associated to the *Poisson* one with non-locked dispersion;
+
+- Both the confidence intervals and the standard errors shown for the *Quasi-Poisson* model are broader w.r.t. the *Poisson* ones;
+
+- The *AIC* is not shown for the *Quasi-Poisson* model. Settling a seemingly popular debate, such behaviour is a design choice of *R Core Team* for any *quasi-likelihood* model fitted using the $\mathsf{glm}$ function.  
+
+Overall, it can be said that *Quasi-Poisson* regression accounts for (in this case) increased dispersion of the data via broadening of C.I.s.
 
 <!-- LEAVE A NEWLINE AT THE END-OF-FILE! -->
