@@ -1,6 +1,6 @@
 # xy plot
 par(mfrow=c(1,1))
-xyplot(y~x1,data=dataset,
+lattice::xyplot(y~x1,data=dataset,
        groups = x11,
        pch = 19,
        xlab="x1",

@@ -1,6 +1,1 @@
-library(DAAG)
-
-# import the dataset
-
-plot(litters)
-
+/home/emaballarin/DSSC/statmeth/HOMEWORK/rexthor/src/DAAG_06_08.R

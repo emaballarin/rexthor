@@ -1,4 +1,4 @@
-dataset <- table.b3
+dataset <- MPV::table.b3
 
 # exploring data
 str(dataset)

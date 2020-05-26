@@ -5,7 +5,7 @@ date: "27th May 2020"
 output:
   html_document:
     theme: darkly
-#    highlight: breezedark
+    highlight: breezedark
     mathjax: default
     self_contained: true
     md_extensions: +autolink_bare_uris
@@ -75,9 +75,9 @@ Upon inspection, however, it appears clear that the relatively poor behaviour of
 In fact, considering for the moment *Model 1*:
 
 - From the *Residuals vs Fitted* graph, it appears clearly that tracks *Seven Sevens* and *Annalong Horseshoe* have both highest residuals (though of opposite sign) and highest fitted values. This evidence of heteroscedasticity is further confirmed by the *Scale-Location* plot.  
-- From the *Residuals vs Leverage* plot we know that the *Seven Sevens* track is also a potential influential point. Such findings, together with the observation that *Seven Sevens* is the only point in the dataset with such comparably high fitted value from the model, make it a highly likely *over*-influential point in the fitted model.
+- From the *Residuals vs Leverage* plot we know that the *Seven Sevens* track is also a potential influential point. Such findings, together with the observation that *Seven Sevens* is the only point in the dataset with such comparably high fitted value from the model, make it a highly likely *over*-influential point for the fitted model.
 
-Now, looking at *Model 2* diagnostic plots, we can see that:
+Now, looking at *Model 2* diagnostic plots, we can see that:  
 - The *Seven Sevens* track has become one of the datapoints with the smallest residuals, but with a fitted value comparable with that previously obtained.  
 - Such datapoint still exhibits high leverage and uniqueness among the datapoints with such high fitted value: it is still a candidate to be an *over*-influential point.  
 
@@ -110,18 +110,19 @@ Let's begin by taking a quick look at the data
 
 ```{r daag6_8a, echo=TRUE}
 library(DAAG)
-library(MASS) #for lm.ridge()
+library(MASS) # for lm.ridge()
 
-head(litters)
-plot(litters)
+head(DAAG::litters)
+plot(DAAG::litters)   # Some linters may complain: that's fine.
 ```
 
-From the basic plot we can immediately tell that  
+From this basic plot we can immediately tell that  
 - `brainwt` is positively correlated to `bodywt` and negatively correlated to `lsize`, although the correlation appears to be very noisy;  
-- There's a significative negative correlation between `bodywt` and `lsize`;
+- There's a significant negative correlation between `bodywt` and `lsize`;
 
 
-we may expect some problems arising from the collinearity underlined in the second bullet when fitting `brainwt` w.r.t. `bodywt` and `lsize`.
+we may expect some problems arising from the collinearity evidenced in the latter, when fitting `brainwt` against `bodywt` and `lsize`.
+
 
 Let's see how the linear model and ridge regression do:
 
@@ -132,23 +133,23 @@ litters.lm = lm(brainwt~bodywt+lsize, data=litters)
 summary(litters.lm)
 
 # fit the ridge linear regression (selecting lambda by GCV)
-select(lm.ridge(brainwt~bodywt+lsize, data=litters,
+MASS::select(MASS::lm.ridge(brainwt~bodywt+lsize, data=DAAG::litters,
                 lambda = seq(0,1,0.001)))
 best.lambda = .118
-litters.ridge = lm.ridge(brainwt~bodywt+lsize, data=litters,
+litters.ridge = MASS::lm.ridge(brainwt~bodywt+lsize, data=DAAG::litters,
                          lambda=best.lambda)
 litters.ridge
 
 
-# estimate train MSE for comparing the models
+# estimate training MSE for comparing the models
 
 # function that computes the predictions of a lm.ridge() model
-predridge <- function(model = litters.ridge, littersdf = litters){
+predridge <- function(model = litters.ridge, littersdf = DAAG::litters){
   coeffs = coef(model)
   return(coeffs[1] + coeffs[2] * littersdf$bodywt + coeffs[3] * littersdf$lsize)
 }
 
-litters.ridge.residuals <- litters$brainwt - predridge()
+litters.ridge.residuals <- DAAG::litters$brainwt - predridge()
 
 print(paste("lm MSE: ",
             sum(litters.lm$residuals**2) / length(litters.lm$residuals)))
@@ -156,11 +157,12 @@ print(paste("ridge MSE: ",
             sum(litters.ridge.residuals**2) / length(litters.ridge.residuals)))
 
 ```
-The coefficients estimated in ridge regression for both predictors are slightly smaller than those fitted by the linear model without regolarization, which is something that we expect to see in ridge regression, although the intercept's value increases slightly. 
 
-We can compare the model looking at the train MSE, which actually shows a very small difference in favour of the model without regolarization.
+The coefficients estimated by ridge regression for both predictors are slightly smaller than those fitted by the linear model without regularization, which is something that we expect to see in ridge regression, although the intercept's value slightly increases. 
 
-Let's now check our models' prediction on a the novel sample $(7,10)$. We'll also estimate the percentile bootstrap 95% confidence interval for both methods for the sample and compare them with the 95% CI reported by `lm()`:
+We can compare the model looking at the training-set MSE, which actually shows a very small difference in favour of the model without regularization.
+
+Let's now check our models' prediction on a the novel datapoint $(7,10)$. We'll also estimate the percentile bootstrap 95% confidence interval for both methods around $(7,10)$ and compare them with the 95% CI reported by `lm()`:
 
 ```{r daag6_8c, echo=TRUE}
 
@@ -172,7 +174,7 @@ yhat.ridge <- predridge(litters.ridge,newpoint)
 
 # estimate percentile bootstrap CI for lm and lm.ridge at newpoint
 
-n <- nrow(litters)
+n <- nrow(DAAG::litters)
 B = 1000
 
 lm.bs = 1:B
@@ -180,12 +182,12 @@ ridge.bs = 1:B
 
 for(b in 1:B){
   idxs = sample (1:n,n, replace = TRUE)
-  bootdf = litters[idxs,]
+  bootdf = DAAG::litters[idxs,]
   
   b_lm = lm(brainwt~ bodywt + lsize, data = bootdf)
   lm.bs[b] <- predict(b_lm, newdata = newpoint)
   
-  b_ridge = lm.ridge(brainwt~ bodywt + lsize, data = bootdf, lambda = best.lambda)
+  b_ridge = MASS::lm.ridge(brainwt~ bodywt + lsize, data = bootdf, lambda = best.lambda)
   ridge.bs[b] <- predridge(b_ridge, newpoint)
 }
 
@@ -207,7 +209,7 @@ lm.cibase = predict(litters.lm, newdata = newpoint,interval="confidence", level=
 
 #plot the three intervals 
 plot(as.factor(c("lm+bs","lm+wald","ridge+bs")),c(yhat.lm,yhat.lm,yhat.ridge),       
-     ylim=c(.404,.425))
+     ylim=c(.404,.425))   # Some linters may complain: not an error.
 
 
 lines(c(1,1),lm.ci, col="red")
@@ -216,7 +218,8 @@ lines(c(3,3),ridge.ci, col="red")
 
 ```
 
-We can see from the graph that the bootstrap CI slightly asymmetric, but once again the difference in the estimates is very small.
+We can see from the graph that the bootstrap CI is slightly asymmetric, but once again the difference in the estimates is very small.
+
 
 ## Exercise 10
 
@@ -234,7 +237,7 @@ library(MPV)
 library(lattice)
 
 plot_fit <- function(fitted_model, x, y, xlab, subtitle){
-  plot(x, y, main = "fitted model", xlab = xlab, sub = subtitle)
+  plot(x, y, main = "fitted model", xlab = xlab, sub = subtitle) # Some linters may complain: not an error.
   lines(x, as.vector(fitted_model$fitted.values), col ="red")
   text(13,3, "y = b0+b1*x", col="red")
 }
