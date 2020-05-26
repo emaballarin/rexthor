@@ -5,7 +5,7 @@ date: "27th May 2020"
 output:
   html_document:
     theme: darkly
-    highlight: breezedark
+ #   highlight: breezedark
     mathjax: default
     self_contained: true
     md_extensions: +autolink_bare_uris
@@ -216,14 +216,79 @@ We can see from the graph that the confidence intervals estimated are very close
 ## Exercise 10
 
 ### Text
+The data frame table.b3 in the MPV package contains data on gas mileage and $11$ other variables for a sample of $32$ automobiles.
 
-### Solution
-```{r daag06_10, code = readLines("src/DAAG_06_10.R"), echo=TRUE}
+(a) Construct a scatterplot of y (mpg) versus x1 (displacement). Is the relationship between these variables non-linear?
+
+### Solution (a)
+
+```{r daag06_10, code = readLines("src/DAAG_06_10_A.R"), echo=TRUE}
 ```
 
-### Comments
-<!-- TODO: Michele Rispoli -->
-Something...
+just by looking on the scatter plot we may suppose a non linear relationship between the output y and the predictor x1: these variables seems to be negative correlated (as x1 increase, y decrease) according to a convex smoothed curve. We may consider some possible transformation.
+
+Not strange points are (yet) detected.
+
+(b) Use the xyplot() function, and x11 (type of transmission) as a group variable. Is a linear model reasonable for these data?
+
+### Solution (b)
+
+```{r daag06_10, code = readLines("src/DAAG_06_10_B.R"), echo=TRUE}
+```
+
+just by looking on the plot, we may suppose that the data might be well divided according to the trasmission method (column x11), infact the observation belonging to $x11 = 0$ are in the x1 range $[100, 200]$. While, the others belong to the range $[200, 500]$. Even if the dataset is splitted in two subset, the kind of relationship between y and x1 is still visible, but this time we may suppose a high correlation for the group $x1 = 0$  than the other group.
+
+In the end, according to the split, we may suppose that now is reasonable to consider the two models like a linear models.
+
+Not strange points are (yet) detected for both models.
+
+(c) Fit the model relating y to x1 and x11 which gives two lines having possibly different slopes and intercepts. Check the diagnostics. Are there any influential observations? Are there any influential outliers?
+
+### Solution (c)
+
+```{r daag06_10, code = readLines("src/DAAG_06_10_C.R"), echo=TRUE}
+```
+
+According to the summary function for the group x11 = 0, we may make a list of notes:
+- residuals: they are spreaded in a quite large range and they seem to be not so symmetrical (more concentrated on the left side of the median).
+- x1       : the estimate is the slope of the linear regressor and it's a negative value but quite close to zero (so the slope of the line is not so marked). Moreover, the t statistic is, in module, quite small but the p-value still suggests to reject the null hypothesis agains the estimate.
+- R^2 adj  : the variability of the model is explained with the 67% just by considering the x1 predictor, we may do better by looking on other predictors.
+- F-stat   : it's value is not so far from 1 but the p-value suggests us to reject the null hypothesis against all the coefficients estimated (without considering the intercept).
+
+In conclusion, we may accept this simple linear regressor, but taking into account that it does not be able to explain very well the model.
+
+While for the group x11 = 1 we have the following observations:
+- residuals: they are spreaded in a resonable range and they seem to be symmetrical.
+- x1       : the estimate is the slope of the linear regressor and it's a negative value but quite close to zero (so the slope of the line is not so marked). Moreover, the t statistic is, in module,  quite small but the p-value still suggests to reject the null hypothesis agains the estimate.
+- R^2 adj  : the variability of the model is explained with the 58% just by considering the x1 predictor, we may do better by looking on other predictors.
+- F-stat   : it's value is not so far from 1 but the p-value suggests us to reject the null hypothesis against all the coefficients estimated (without considering the intercept).
+
+In conclusion, we may accept this simple linear regressor, but taking into account that it does not be able to explain very well the model.
+
+For what concern the residuals for the fitted models we may say something more, in particular for group x11 = 0:
+
+- residual vs fitted: the plot suggest us a kind of pattern among the residuals but the observation used to fit the model are not so much and they look quite spread, so we cannot infere on the non-linear relationship among the residuals of the model.
+- qq plot           : the residuals seem to be normal distributed even if the point 15 is much far from the straight line (could be an outlier or a point with high level of information).
+- scale-location    : the red line suggests us heteroskedasticity for the residuals but, inasmuch the number of observations is small, we cannot accept the heteroskedasticity
+- residual vs lvg   : the point 15 is in the critical region of the plot and it means that it has a strong influence on the model, so it could be an outlier or an influencer. 
+
+While for the group x11 = 1:
+
+- residual vs fitted: the plot suggest no clear pattern among the residuals, and we may suppose a non-linear relationship on the residuals.
+- qq plot           : the residuals seem to be not so much normal distributed just by looking on the point outside the range [-1, 1], so the normality assumption is quite weak.
+- scale-location    : the red line suggests us homoskedasticity for the residuals that might be correct, and we may accept it.
+- residual vs lvg   : no one points is in the critical region, even if the point 17  is close to the borderline, it could be a very influence point.
+
+(d) Plot the residuals against the variable x7 (number of transmission speeds), again using x11 as a group variable. Is there anything striking about this plot?
+
+### Solution (d)
+
+```{r daag06_10, code = readLines("src/DAAG_06_10_D.R"), echo=TRUE}
+```
+
+The residual plot for the group x11 = 0 shows us that the points are  spread just on three values of x7 (integer values) and seem doesn't  exist a clear pattern among them.
+
+While in the residual plot for the group x11 = 1, the points are all  distributed on the single value of x7, so it might suggest that x7 is not a suitable predictor for our model because we have multiple output for the same value of x7: we may discard it.
 
 ## Exercise 11
 
@@ -243,8 +308,18 @@ Something...
 
 ### Text
 
+In the data set (an artificial one of 3121 patients, that is similar to a subset of the data analyzed in Stiell et al., 2001) minor.head.injury, obtain a logistic regression model relating clinically.important.brain.injury to other variables. Patients whose risk is sufficiently high will be sent for CT (computed tomography). Using a risk threshold of 0.025 (2.5%), turn the result into a decision rule for use of CT.
+
 ### Solution
 
+```{r daag06_10, code = readLines("src/DAAG_08_02.R"), echo=TRUE}
+```
+
+### Comments
+
+Almost all of the independent variables are highly significant according to the p-values and the more effective variables have an impact on the output of two times the assumed value of the variable itself (i.e. betahat_i is approximately equals to 2, than y_i = …+ 2 * x_i + …).
+
+The difference between Null model and the current one is quite large so it’s good, in fact 1 - pchisq(1741.6 - 1201.3, 3120 - 3110) = 0 and it means there is evidence against the null hypothesis i.e. to pick the model with just a constant value.
 
 ## Exercise 3
 
