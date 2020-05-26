@@ -6,14 +6,17 @@ library(DAAG)
 data(nihills)
 
 
-# Fit models (no row removal)
+### ORIGINAL DATASET ###
+
+
+# Fit models
 nihills_lm1 <- lm(time ~ dist+climb,            data=nihills)
 nihills_lm2 <- lm(time ~ dist+climb+dist:climb, data=nihills)
 
-# ANOVA (no row removal)
+# ANOVA
 anova(nihills_lm1, nihills_lm2)
 
-# DiagPlots
+# Diagnostic plots
 par(mfrow=c(2,2))
 plot(nihills_lm1)
 
@@ -21,20 +24,22 @@ par(mfrow=c(2,2))
 plot(nihills_lm2)
 
 
+### ONE PROBLEMATIC DATAPOINT REMOVED ###
 
-# Remove some "problematic" datapoints!
+
+# Removal
 rows_to_remove <- c("Seven Sevens")
 nihills_pruned <- nihills[!(row.names(nihills) %in% rows_to_remove),]
 
 
-# Fit models (1-row removal)
+# Fit models
 nihills_lm1_pruned <- lm(time ~ dist+climb,            data=nihills_pruned)
 nihills_lm2_pruned <- lm(time ~ dist+climb+dist:climb, data=nihills_pruned)
 
-# ANOVA (1-row removal)
+# ANOVA
 anova(nihills_lm1_pruned, nihills_lm2_pruned)
 
-# DiagPlots
+# Diagnostic plots
 par(mfrow=c(2,2))
 plot(nihills_lm1_pruned)
 
@@ -42,22 +47,21 @@ par(mfrow=c(2,2))
 plot(nihills_lm2_pruned)
 
 
+### TWO PROBLEMATIC DATAPOINTS REMOVED ###
 
-# Once we learned the trick, we wanted to do it once more ;)
 
-
-# Remove some "problematic" datapoints!
+# Removal
 rows_to_remove      <- c("Seven Sevens", "Annalong Horseshoe")
 nihills_pruned_more <- nihills[!(row.names(nihills) %in% rows_to_remove),]
 
 
-# Fit models (2-row removal)
+# Fit models
 nihills_lm1_pruned_more <- lm(time ~ dist+climb,            data=nihills_pruned_more)
 nihills_lm2_pruned_more <- lm(time ~ dist+climb+dist:climb, data=nihills_pruned_more)
 
-# ANOVA (2-row removal)
+# ANOVA
 anova(nihills_lm1_pruned_more, nihills_lm2_pruned_more)
 
-# DiagPlots
+# Diagnostic plots
 par(mfrow=c(2,2))
 plot(nihills_lm1_pruned_more)
