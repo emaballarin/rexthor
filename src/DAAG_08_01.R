@@ -1,11 +1,10 @@
 # LIBRARIES
 library(ggplot2)
-library(jtools)
 
 # DATA:
 conc <- c(0.1, 0.5, 1.0, 10.0, 20.0, 30.0, 50.0, 70.0, 80.0, 100.0, 150.0)
-no   <- c(7,   1,  10,    9,    2,    9,   13,    1,    1,     4,     3)
-yes  <- c(0,   0,   3,    4,    0,    6,    7,    0,    0,     1,     7)
+no   <- c(7,   1,  10,    9,    2,    9,   13,    1,    1,     4,     3  )
+yes  <- c(0,   0,   3,    4,    0,    6,    7,    0,    0,     1,     7  )
 
 
 # COMPOSITES
@@ -35,3 +34,5 @@ lines(yes_probab~conc, synthdata)
 
 
 # This is the best we can do, probably... observation noise seems too high!
+
+summary(fit_out)
