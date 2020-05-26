@@ -102,8 +102,8 @@ head(litters)
 plot(litters)
 ```
 
-From the basic plot we can immediately tell that
-- `brainwt` is positively correlated to `bodywt` and negatively correlated to `lsize`, although the correlation appears to be very noisy;
+From the basic plot we can immediately tell that  
+- `brainwt` is positively correlated to `bodywt` and negatively correlated to `lsize`, although the correlation appears to be very noisy;  
 - There's a significative negative correlation between `bodywt` and `lsize`;
 
 
@@ -142,12 +142,11 @@ print(paste("ridge MSE: ",
             sum(litters.ridge.residuals**2) / length(litters.ridge.residuals)))
 
 ```
-The coefficients estimated in ridge regression for both predictors are slightly smaller than those fitted by the linear model without regolarization, while the intercept's value increases a bit. 
+The coefficients estimated in ridge regression for both predictors are slightly smaller than those fitted by the linear model without regolarization, which is something that we expect to see in ridge regression, although the intercept's value increases slightly. 
 
-The difference in MSE is very small, still linear regression appears to perform better on the trained samples, suggesting that our worries for multicollinearity were not solved by ridge regression.
+We can compare the model looking at the train MSE, which actually shows a very small difference in favour of the model without regolarization.
 
-Let's now check our models' prediction on a the novel sample $(7,10)$. We'll also estimate the studentized bootstrap 95% confidence interval for both methods for the sample and compare them with the 95% CI reported by `lm()`:
-
+Let's now check our models' prediction on a the novel sample $(7,10)$. We'll also estimate the percentile bootstrap 95% confidence interval for both methods for the sample and compare them with the 95% CI reported by `lm()`:
 
 ```{r daag6_8c, echo=TRUE}
 
@@ -157,38 +156,29 @@ newpoint = data.frame(bodywt=7, lsize=10)
 yhat.lm <- predict(litters.lm, newdata = newpoint)
 yhat.ridge <- predridge(litters.ridge,newpoint)
 
-
-# estimate studentized bootstrap CI for lm and lm.ridge at newpoint
+# estimate percentile bootstrap CI for lm and lm.ridge at newpoint
 
 n <- nrow(litters)
 B = 1000
 
-lm.zb = 1:B
-ridge.zb = 1:B
+lm.bs = 1:B
+ridge.bs = 1:B
 
 for(b in 1:B){
   idxs = sample (1:n,n, replace = TRUE)
   bootdf = litters[idxs,]
   
   b_lm = lm(brainwt~ bodywt + lsize, data = bootdf)
-  yhat.b_lm <- predict(b_lm, newdata = newpoint)
-  se.b_lm <- sd(b_lm$fitted.values)
-  lm.zb[b] <- (yhat.b_lm - yhat.lm)/se.b_lm
+  lm.bs[b] <- predict(b_lm, newdata = newpoint)
   
   b_ridge = lm.ridge(brainwt~ bodywt + lsize, data = bootdf, lambda = best.lambda)
-  yhat.b_ridge = predridge(b_ridge, newpoint)
-  se.b_ridge = sd(predridge(b_ridge,bootdf))
-  ridge.zb[b] <- (yhat.b_ridge - yhat.ridge)/se.b_ridge
+  ridge.bs[b] <- predridge(b_ridge, newpoint)
 }
 
-se.lm <- sd(litters.lm$fitted.values)
-se.ridge <- sd(predridge())
 
-lm.bquants = quantile(lm.zb,probs=c(0.975,0.025))
-lm.ci = yhat.lm - se.lm*lm.bquants
+lm.ci = quantile(lm.bs,probs=c(0.025,0.975))
 
-ridge.bquants = quantile(ridge.zb,probs=c(0.975,0.025))
-ridge.ci = yhat.ridge - se.ridge*ridge.bquants
+ridge.ci = quantile(ridge.bs,probs=c(0.025,0.975))
 
 print("lm estimate + bootstrap 95% CI:")
 print(paste(yhat.lm, "(", lm.ci[1],",",lm.ci[2],")"))
@@ -203,7 +193,7 @@ lm.cibase = predict(litters.lm, newdata = newpoint,interval="confidence", level=
 
 #plot the three intervals 
 plot(as.factor(c("lm+bs","lm+wald","ridge+bs")),c(yhat.lm,yhat.lm,yhat.ridge),       
-     ylim=c(.4,.43))
+     ylim=c(.404,.425))
 
 lines(c(1,1),lm.ci, col="red")
 lines(c(2,2),lm.cibase, col="red")
@@ -211,7 +201,7 @@ lines(c(3,3),ridge.ci, col="red")
 
 ```
 
-We can see from the graph that the confidence intervals estimated are very close. Notice that, as expected, the boostrap estimated confidence intervals are asymmetric.
+We can see from the graph that the bootstrap CI slightly asymmetric, but once again the difference in the estimates is very small.
 
 ## Exercise 10
 
