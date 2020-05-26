@@ -18,6 +18,7 @@ plot_fit <- function(fitted_model, x, y, xlab, subtitle){
 ## a
 
 # scatter plot
+par(mfrow = c(1, 1))
 plot(dataset$x1, dataset$y, main="Scatterplot x1 versus y",
      xlab="x_1 (displacement)", ylab="y (mpg)", pch=19) 
 
@@ -49,10 +50,10 @@ xyplot(y~x1,data=dataset,
 # the others belong to the range [200, 500].
 
 # Even if the dataset is splitted in two subset, the kind of relationship between
-# y and x1 is still visible, but this time we may suppose a high correlation for 
+# y and x1 is still visible, but this time we may suppose a high relation for 
 # the group x1 = 0  than the other group.
 
-# In the end, according to the split, we may suppose that now is reasonable to
+# In the end, according to the split, we may see that now is reasonable to
 # consider the two models like a linear models.
 
 # Not strange points are (yet) detected for both models.
@@ -105,7 +106,7 @@ summary(fitted_model_x1_2) # group x11 = 1
 
 # residuals plots group x11 = 0
 par(mfrow=c(2,2))
-plot(fitted_model_x1_1)
+plot(fitted_model_x1_1, main = "Analisys for model y ~ x1 (x11 = 0)")
 
 # residual vs fitted: the plot suggest us a kind of pattern among the residuals
 #                     but the observation used to fit the model are not so much
@@ -117,13 +118,21 @@ plot(fitted_model_x1_1)
 # scale-location    : the red line suggests us heteroskedasticity for the residuals
 #                     but, inasmuch the number of observations is small, we cannot
 #                     accept the heteroskedasticity
-# residual vs lvg   : the point 15 is in the critical region of the plot and it means
+# residual vs lvg   : the point 5 is in the critical region of the plot and it means
 #                     that it has a strong influence on the model, so it could be an 
 #                     outlier or an influencer. 
 
+# The point 5 seems to be both an outlier and an influencer because its cook distance
+# is very large, moreover its residual is significaly far from zero, in the end it's
+# the only pointed fittend in the first portion of the model.
+
+# prepare the modified model without point 5
+dataset_b <- dataset[-5, ]
+fitted_model_x1_1_b <- lm(y ~ x1, data = dataset_b[dataset_b$x11 == 0, ])
+
 # residuals plots group x11 = 1
 par(mfrow=c(2,2))
-plot(fitted_model_x1_2)
+plot(fitted_model_x1_2, main = "Analisys for model y ~ x1 (x11 = 1)")
 
 # residual vs fitted: the plot suggest no clear pattern among the residuals, and
 #                     we may suppose a non-linear relationship on the residuals.
@@ -136,17 +145,23 @@ plot(fitted_model_x1_2)
 #                     is close to the borderline, it could be a very influence point.
 
 # fitted model plots
-par(mfrow=c(1,2))
+par(mfrow=c(1,3))
 plot_fit(fitted_model_x1_1, 
          dataset[dataset$x11 == 0, ]$x1, 
          dataset[dataset$x11 == 0, ]$y, 
          xlab = "x1", 
          subtitle = "group x11 = 0")
 
-# the plot of the fitted model shows us that the linear regressor could be a 
-# reasonable regressor, moreover the observation with small x1 could be the 
-# critical point of the residual vs laverage analysis and it could be an
-# outlier because by removing it from, the fitted model should be the same.
+# the plot of the fitted model shows us that the linear 
+# regressor could be a  reasonable regressor
+
+plot_fit(fitted_model_x1_1_b, 
+         dataset_b[dataset_b$x11 == 0, ]$x1, 
+         dataset_b[dataset_b$x11 == 0, ]$y, 
+         xlab = "x1", 
+         subtitle = "group x11 = 0 (without point 5)")
+
+# by looking the plot it's clear that point 5 is almost an influencer point.
 
 plot_fit(fitted_model_x1_2, 
          dataset[dataset$x11 == 1, ]$x1, 
@@ -168,11 +183,11 @@ summary(fitted_model_x7_2) # group x11 = 1
 
 # residuals plots group x11 = 0
 par(mfrow=c(2,2))
-plot(fitted_model_x7_1)
+plot(fitted_model_x7_1, main = "Analisys for model y ~ x7 (x11 = 0)")
 
 # residuals plots group x11 = 1
 par(mfrow=c(2,2))
-plot(fitted_model_x7_2)
+plot(fitted_model_x7_2, main = "Analisys for model y ~ x7 (x11 = 1)")
 
 # fitted model plots
 par(mfrow=c(1,2))
@@ -208,3 +223,4 @@ plot(dataset[dataset$x11 == 1, ]$x7,
 # distributed on the single value of x7, so it might suggest that x7 is
 # not a suitable predictor for our model because we have multiple output
 # for the same value of x7: we may discard it.
+
