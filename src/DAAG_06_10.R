@@ -106,7 +106,7 @@ summary(fitted_model_x1_2) # group x11 = 1
 
 # residuals plots group x11 = 0
 par(mfrow=c(2,2))
-plot(fitted_model_x1_1)
+plot(fitted_model_x1_1, main = "Analisys for model y ~ x1 (x11 = 0)")
 
 # residual vs fitted: the plot suggest us a kind of pattern among the residuals
 #                     but the observation used to fit the model are not so much
@@ -132,7 +132,7 @@ fitted_model_x1_1_b <- lm(y ~ x1, data = dataset_b[dataset_b$x11 == 0, ])
 
 # residuals plots group x11 = 1
 par(mfrow=c(2,2))
-plot(fitted_model_x1_2)
+plot(fitted_model_x1_2, main = "Analisys for model y ~ x1 (x11 = 1)")
 
 # residual vs fitted: the plot suggest no clear pattern among the residuals, and
 #                     we may suppose a non-linear relationship on the residuals.
@@ -183,11 +183,11 @@ summary(fitted_model_x7_2) # group x11 = 1
 
 # residuals plots group x11 = 0
 par(mfrow=c(2,2))
-plot(fitted_model_x7_1)
+plot(fitted_model_x7_1, main = "Analisys for model y ~ x7 (x11 = 0)")
 
 # residuals plots group x11 = 1
 par(mfrow=c(2,2))
-plot(fitted_model_x7_2)
+plot(fitted_model_x7_2, main = "Analisys for model y ~ x7 (x11 = 1)")
 
 # fitted model plots
 par(mfrow=c(1,2))

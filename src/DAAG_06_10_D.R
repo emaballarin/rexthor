@@ -4,7 +4,7 @@ fitted_model_x7_2 <- lm(y ~ x7, data = dataset[dataset$x11 == 1, ])
 
 # residuals plots group x11 = 0
 par(mfrow=c(2, 2))
-plot(fitted_model_x7_1)
+plot(fitted_model_x7_1, main = "Analisys for model y ~ x7 (x11 = 0)")
 
 # the residuals are spreaded in just three integer values that are all
 # multiple of three, moreover the qq-plot shows how the normality 
@@ -12,7 +12,7 @@ plot(fitted_model_x7_1)
 
 # residuals plots group x11 = 1
 par(mfrow=c(2, 2))
-plot(fitted_model_x7_2)
+plot(fitted_model_x7_2, main = "Analisys for model y ~ x7 (x11 = 1)")
 
 # x7 is the same for all points in group x11 = 1, then they have the
 # same fitted value, the scal-location plot is not reasonable and the

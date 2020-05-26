@@ -8,11 +8,11 @@ summary(fitted_model_x1_2) # group x11 = 1
 
 # residuals plots group x11 = 0
 par(mfrow=c(2, 2))
-plot(fitted_model_x1_1)
+plot(fitted_model_x1_1, main = "Analisys for model y ~ x1 (x11 = 0)")
 
 # residuals plots group x11 = 1
 par(mfrow=c(2, 2))
-plot(fitted_model_x1_2)
+plot(fitted_model_x1_2, main = "Analisys for model y ~ x1 (x11 = 1)")
 
 # prepare the modified model without point 5
 dataset_b <- dataset[-5, ]
