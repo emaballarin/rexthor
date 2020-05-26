@@ -1,5 +1,8 @@
 dataset <- table.b3
 
+# exploring data
+str(dataset)
+
 par(mfrow=c(1,1))
 
 # scatter plot
