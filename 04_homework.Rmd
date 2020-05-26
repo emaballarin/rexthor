@@ -216,8 +216,8 @@ predict(litters.lm, newdata = newpoint,interval="confidence", level=.95)
 lm.cibase = predict(litters.lm, newdata = newpoint,interval="confidence", level=.95)[2:3]
 
 #plot the three intervals 
-plot(as.factor(c("lm+bs","lm+wald","ridge+bs")),c(yhat.lm,yhat.lm,yhat.ridge),       
-     ylim=c(.4,.43))
+plot(as.factor(c("lm+bs","lm+wald","ridge+bs")),c(yhat.lm,yhat.lm,yhat.ridge),
+    ylim=c(.4,.43))
 
 lines(c(1,1),lm.ci, col="red")
 lines(c(2,2),lm.cibase, col="red")
@@ -309,6 +309,7 @@ While in the residual plot for the group x11 = 1, the points are all  distribute
 ### Text
 
 ### Solution
+<!-- ANDREA! -->
 
 # Exercises from *DAAG, Chapter 8* 
 
@@ -324,6 +325,16 @@ Use logistic regression to model the probability of inhibition as a function of 
 ```{r daag08_01, code = readLines("src/DAAG_08_01.R"), echo=TRUE}
 ```
 
+### Comments
+
+Following an *orthodox interpretation* of the exercise text, we are required to fit a *logistic model* that tries to explain or peredict the probability of inhibition as a function of concentration -- assming that the counts shown in the datatable refer to different, independent $120\text{s}$-long observations.  
+
+Upon visual analysis of the scatterplot of the data, it appears that a global trend in the data is hard to be noticed, and both *up-* and *down-**swinging* trends are present as the concentration increases.  
+
+The best we can do in this case os to fit a *logistic regression* model on untransformed data, directly for the continuous variable that computes the probability of inhibition, using the total number of *yes/no* observations per concentration as weights.  
+
+The result is acceptable, but still corrupted by noise.  
+
 
 ## Exercise 2
 
@@ -333,7 +344,7 @@ In the data set (an artificial one of 3121 patients, that is similar to a subset
 
 ### Solution
 
-```{r daag06_10, code = readLines("src/DAAG_08_02.R"), echo=TRUE}
+```{r daag08_02, code = readLines("src/DAAG_08_02.R"), echo=TRUE}
 ```
 
 ### Comments
@@ -346,7 +357,25 @@ The difference between Null model and the current one is quite large so it’s g
 
 ### Text
 
+Consider again the $\mathsf{moths}$ dataset of *Section 8.4*.  
+(a) What happens to the standard error estimates when the *poisson* family is used in $\mathsf{glm()}$ instead of the *quasipoisson* family?  
+(b) Analyze the *P moths*, in the same way as the *A moths* were analyzed. Comment on the effect of transect length.  
+
+
 ### Solution
+```{r daag08_03, code = readLines("src/DAAG_08_03.R"), echo=TRUE}
+```
+
+### Comments
+
+(a) As we can see from the printed results -- and as also noted in *Exercise DAAG 8.6* -- standard error intervals estimated from a *Poisson regression* model are narrower w.r.t. *quasi-poisson* ones. This can be explained as a positive dispersion coefficient (as the one estimated in this case for the *quasi-Poisson* model inflates error bounds).
+
+(b) By omitting the portions of data analysis directly determined by the observed $0$-count for the *Bank* habitat (in the case of *A moths*), the analysis is pretty compact and is contained in the snipped above.  
+
+With a difference w.r.t. the analysis shown in the book, the reference level among different habitats has been chosen in order to maximize overall significance for the coefficients in the linear model leading to the *(quasi-)Poisson* one. Since no clear dominance exists in such choice, the closest to hypotetical convex Pareto front has been chosen. Regardless of such criterion, all observations contained in the following are invariant to such choice.  
+
+From the summary of the fitted GLM we can observe that the $log(\text{length})$ term has a significant coefficient ($p < 0.004$). The effect of transect length on moth count is therefore relevant (definitely more relevant in comparison to the *A moths*). This can show that -- w.r.t. *A moths*, *P moths* enjoy longer flights and/or pass significantly many (more) times across transects.
+
 
 
 ## Exercise 6
