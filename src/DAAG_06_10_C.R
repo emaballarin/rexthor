@@ -53,13 +53,28 @@ plot(fitted_model_x7_1)
 par(mfrow=c(2,2))
 plot(fitted_model_x7_2)
 
+# prepare the modified model without point 5
+dataset_b <- dataset[-5, ]
+fitted_model_x1_1_b <- lm(y ~ x1, data = dataset_b[dataset_b$x11 == 0, ])
+
 # fitted model plots
-par(mfrow=c(1,2))
+par(mfrow=c(1,3))
 plot_fit(fitted_model_x7_1, 
          dataset[dataset$x11 == 0, ]$x7, 
          dataset[dataset$x11 == 0, ]$y,
          xlab = "x7", 
          subtitle = "group x11 = 0")
+
+# the plot of the fitted model shows us that the linear 
+# regressor could be a  reasonable regressor
+
+plot_fit(fitted_model_x1_1_b, 
+         dataset_b[dataset_b$x11 == 0, ]$x1, 
+         dataset_b[dataset_b$x11 == 0, ]$y, 
+         xlab = "x1", 
+         subtitle = "group x11 = 0 (without point 5)")
+
+# by looking the plot it's clear that point 5 is almost an influencer point.
 
 plot_fit(fitted_model_x7_2, 
          dataset[dataset$x11 == 1, ]$x7, 

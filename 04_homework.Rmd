@@ -5,7 +5,7 @@ date: "27th May 2020"
 output:
   html_document:
     theme: darkly
-    highlight: breezedark
+#    highlight: breezedark
     mathjax: default
     self_contained: true
     md_extensions: +autolink_bare_uris
@@ -98,6 +98,18 @@ The data frame table.b3 in the MPV package contains data on gas mileage and $11$
 
 ### Solution (a)
 
+```{r}
+library(MPV)
+library(lattice)
+
+plot_fit <- function(fitted_model, x, y, xlab, subtitle){
+    plot(x, y, main = "fitted model", xlab = xlab, sub = subtitle)
+  lines(x, as.vector(fitted_model$fitted.values), col ="red")
+  text(13,3, "y = b0+b1*x", col="red")
+}
+```
+
+
 ```{r daag06_10, code = readLines("src/DAAG_06_10_A.R"), echo=TRUE}
 ```
 
@@ -112,9 +124,9 @@ Not strange points are (yet) detected.
 ```{r daag06_10, code = readLines("src/DAAG_06_10_B.R"), echo=TRUE}
 ```
 
-just by looking on the plot, we may suppose that the data might be well divided according to the trasmission method (column x11), infact the observation belonging to $x11 = 0$ are in the x1 range $[100, 200]$. While, the others belong to the range $[200, 500]$. Even if the dataset is splitted in two subset, the kind of relationship between y and x1 is still visible, but this time we may suppose a high correlation for the group $x1 = 0$  than the other group.
+just by looking on the plot, we may suppose that the data might be well divided according to the trasmission method (column x11), infact the observation belonging to $x11 = 0$ are in the x1 range $[100, 200]$. While, the others belong to the range $[200, 500]$. Even if the dataset is splitted in two subset, the kind of relationship between y and x1 is still visible, but this time we may suppose a relation for the group $x1 = 0$  than the other group.
 
-In the end, according to the split, we may suppose that now is reasonable to consider the two models like a linear models.
+In the end, according to the split, it is reasonable to consider the two models like a linear models.
 
 Not strange points are (yet) detected for both models.
 
@@ -147,6 +159,8 @@ For what concern the residuals for the fitted models we may say something more, 
 - qq plot           : the residuals seem to be normal distributed even if the point 15 is much far from the straight line (could be an outlier or a point with high level of information).
 - scale-location    : the red line suggests us heteroskedasticity for the residuals but, inasmuch the number of observations is small, we cannot accept the heteroskedasticity
 - residual vs lvg   : the point 15 is in the critical region of the plot and it means that it has a strong influence on the model, so it could be an outlier or an influencer. 
+
+The point 5 seems to be both an outlier and an influencer because its cook distance is very large, moreover its residual is significaly far from zero, in the end it's the only pointed fittend in the first portion of the model.
 
 While for the group x11 = 1:
 
