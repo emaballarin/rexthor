@@ -243,14 +243,14 @@ library(MPV)
 library(lattice)
 
 plot_fit <- function(fitted_model, x, y, xlab, subtitle){
-    plot(x, y, main = "fitted model", xlab = xlab, sub = subtitle)
+  plot(x, y, main = "fitted model", xlab = xlab, sub = subtitle)
   lines(x, as.vector(fitted_model$fitted.values), col ="red")
   text(13,3, "y = b0+b1*x", col="red")
 }
 ```
 
 
-```{r daag06_10, code = readLines("src/DAAG_06_10_A.R"), echo=TRUE}
+```{r daag06_10a, code = readLines("src/DAAG_06_10_A.R"), echo=TRUE}
 ```
 
 just by looking on the scatter plot we may suppose a non linear relationship between the output y and the predictor x1: these variables seem to be negative related (as x1 increase, y decrease) according to a convex smoothed curve. We may consider some possible transformation.
@@ -263,7 +263,7 @@ Use the xyplot() function, and x11 (type of transmission) as a group variable. I
 
 #### Solution
 
-```{r daag06_10, code = readLines("src/DAAG_06_10_B.R"), echo=TRUE}
+```{r daag06_10b, code = readLines("src/DAAG_06_10_B.R"), echo=TRUE}
 ```
 
 just by looking on the plot, we may suppose that the data might be well divided according to the trasmission method (column x11), in fact the observation belonging to $x11 = 0$ are in the x1 range $[100, 200]$. While, the others belong to the range $[200, 500]$. Even if the dataset is splitted in two subset, the kind of relationship between y and x1 is still visible, but this time we may assume a strongest relation among data for the group $x1 = 0$  than the other group.
@@ -278,7 +278,7 @@ Fit the model relating y to x1 and x11 which gives two lines having possibly dif
 
 #### Solution
 
-```{r daag06_10, code = readLines("src/DAAG_06_10_C.R"), echo=TRUE}
+```{r daag06_10c, code = readLines("src/DAAG_06_10_C.R"), echo=TRUE}
 ```
 
 According to the summary function for the group x11 = 0, we may say something: 
@@ -332,7 +332,7 @@ Plot the residuals against the variable x7 (number of transmission speeds), agai
 
 #### Solution
 
-```{r daag06_10, code = readLines("src/DAAG_06_10_D.R"), echo=TRUE}
+```{r daag06_10d, code = readLines("src/DAAG_06_10_D.R"), echo=TRUE}
 ```
 
 The residual plot for the group x11 = 0 shows us that the points are  spread just on three values of x7 (integer values) and seem doesn't  exist a clear pattern among them.
