@@ -31,7 +31,7 @@ summary(pmoths_qpois)
 
 
 # QUASIPOISSON GLM, UPPERSIDE REFLEVEL (Pareto-symplex optimal significance)
-DAAG::moths$habitat_rel <- relevel(DAAG::moths$habitat, ref="Upperside")
+moths$habitat_rel <- relevel(DAAG::moths$habitat, ref="Upperside")
 pmoths_qpois_rel  <- glm(P ~ habitat_rel + log(meters), family = quasipoisson, data = moths)
 summary(pmoths_qpois_rel)
 
@@ -40,12 +40,12 @@ summary(pmoths_qpois_rel)
 # THE ACTUAL EXERCISE:
 
 # (a): POISSON GLM, UPPERSIDE REFLEVEL
-DAAG::moths$habitat_rel <- relevel(DAAG::moths$habitat, ref="Upperside")
+moths$habitat_rel <- relevel(DAAG::moths$habitat, ref="Upperside")
 pmoths_pois_rel  <- glm(P ~ habitat_rel + log(meters), family = poisson, data = moths)
 summary(pmoths_pois_rel)    # Shrinkage of C.I.s as expected!
 
 # (b): QUASIPOISSON GLM, UPPERSIDE REFLEVEL
-DAAG::moths$habitat_rel <- relevel(DAAG::moths$habitat, ref="Upperside")
+moths$habitat_rel <- relevel(DAAG::moths$habitat, ref="Upperside")
 pmoths_qpois_rel  <- glm(P ~ habitat_rel + log(meters), family = quasipoisson, data = moths)
 summary(pmoths_qpois_rel)   # Significant transect length!
 

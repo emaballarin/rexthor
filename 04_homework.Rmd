@@ -346,7 +346,7 @@ While in the residual plot for the group x11 = 1, the points are all  distribute
 
 ### Text
 
-It is given the numbers of occasions when inhibition (i.e., no flow of current across a membrane) occurred within $120$s, for different concentrations of the protein *peptide-C* (data are used with the permission of Claudia Haarmann, who obtained these data in the course of her PhD research). The outcome `yes` implies that inhibition has occurred.  
+It is given as a dataset the numbers of occasions when inhibition (i.e. no flow of current across a membrane) occurred within $120$s, for different concentrations of the protein *peptide-C* (data are used with the permission of Claudia Haarmann, who obtained these data in the course of her PhD research). The outcome `yes` implies that inhibition has occurred.  
 Use logistic regression to model the probability of inhibition as a function of protein concentration.
 
 
@@ -358,9 +358,9 @@ Use logistic regression to model the probability of inhibition as a function of 
 
 Following an *orthodox interpretation* of the exercise text, we are required to fit a *logistic model* that tries to explain or peredict the probability of inhibition as a function of concentration -- assming that the counts shown in the datatable refer to different, independent $120\text{s}$-long observations.  
 
-Upon visual analysis of the scatterplot of the data, it appears that a global trend in the data is hard to be noticed, and both *up-* and *down-**swinging* trends are present as the concentration increases.  
+Upon visual analysis of the scatterplot of the data, it appears that a global trend in the data is hard to be noticed -- or anyway extremely difficult to model in functional form --, and both *up-* and *down-**swinging* trends are present as the concentration increases (apart from the last point, which is the highest in probability of the whole dataset).  
 
-The best we can do in this case os to fit a *logistic regression* model on untransformed data, directly for the continuous variable that computes the probability of inhibition, using the total number of *yes/no* observations per concentration as weights.  
+The best we can do in this case is to fit a *logistic regression* model on untransformed data, directly for the continuous variable that computes the probability of inhibition, using the total number of *yes/no* observations per concentration as logistic regression weights.  
 
 The result is acceptable, but still corrupted by noise.  
 
@@ -389,7 +389,7 @@ In the end, it is provided a clear table to summarize the estimated coefficients
 ### Text
 
 Consider again the $\mathsf{moths}$ dataset of *Section 8.4*.  
-(a) What happens to the standard error estimates when the *poisson* family is used in $\mathsf{glm()}$ instead of the *quasipoisson* family?  
+(a) What happens to the standard error estimates when the *Poisson* family is used in $\mathsf{glm()}$ instead of the *Quasi-Poisson* family?  
 (b) Analyze the *P moths*, in the same way as the *A moths* were analyzed. Comment on the effect of transect length.  
 
 
@@ -399,13 +399,13 @@ Consider again the $\mathsf{moths}$ dataset of *Section 8.4*.
 
 ### Comments
 
-(a) As we can see from the printed results -- and as also noted in *Exercise DAAG 8.6* -- standard error intervals estimated from a *Poisson regression* model are narrower w.r.t. *quasi-poisson* ones. This can be explained as a positive dispersion coefficient (as the one estimated in this case for the *quasi-Poisson* model inflates error bounds).
+(a) As we can see from the printed results -- and as also noted in *Exercise DAAG 8.6* -- standard error intervals estimated from a *Poisson regression* model are narrower w.r.t. *Quasi-Poisson* ones. This can be explained as a positive dispersion coefficient (like the one estimated in this case for the *quasi-Poisson* model) inflates error bounds.
 
-(b) By omitting the portions of data analysis directly determined by the observed $0$-count for the *Bank* habitat (in the case of *A moths*), the analysis is pretty compact and is contained in the snipped above.  
+(b) By omitting the portions of data analysis directly determined by the observed $0$-count for the *Bank* habitat (in the case of *A moths*), the analysis is compact and contained in the code snipped above.  
 
-With a difference w.r.t. the analysis shown in the book, the reference level among different habitats has been chosen in order to maximize overall significance for the coefficients in the linear model leading to the *(quasi-)Poisson* one. Since no clear dominance exists in such choice, the closest to hypotetical convex Pareto front has been chosen. Regardless of such criterion, all observations contained in the following are invariant to such choice.  
+With a difference w.r.t. the analysis shown in the book, the reference level among different habitats has been chosen in order to maximize overall significance for the coefficients in the linear model contained in the *(quasi-)Poisson* one. Since no clear dominance exists in such choice, the closest to Pareto-front has been chosen (symplex-area method). Regardless of such criterion, all observations contained in the following are invariant to such choice.  
 
-From the summary of the fitted GLM we can observe that the $log(\text{length})$ term has a significant coefficient ($p < 0.004$). The effect of transect length on moth count is therefore relevant (definitely more relevant in comparison to the *A moths*). This can show that -- w.r.t. *A moths*, *P moths* enjoy longer flights and/or pass significantly many (more) times across transects.
+From the summary of the fitted GLM we can observe that the $log(\text{length})$ term has a significant coefficient ($p < 0.004$). The effect of transect length on moth count is therefore relevant (definitely more relevant in comparison to the *A moths*). This can show that -- w.r.t. *A moths*, *P moths* enjoy longer flights and/or pass significantly many (more) times across transects during their aerial wanderings.
 
 
 
@@ -427,24 +427,24 @@ Fit a Poisson regression model to these data, and compare the estimated coeffici
 
 ### Comments
 
-(a) Preliminarily to a more *in-depth* analysis, it is worth noting that -- w.r.t. to the point we are currently answering to -- we are performing a *Poisson regression* model to data generated according to a *Poisson regression* generative model.  
+(a) Preliminarily to a more *in-depth* analysis, it is worth noting that -- w.r.t. to the point we are currently answering to -- we are performing a *Poisson regression* fit to data generated according to a *Poisson regression* generative model.  
 
-Far from being *that* obvious, this allows us to preliminarily state that what we are trying to accomplish is *a posteriori* (information-theoretically) the most efficient fitting procedure to predict the expected counts from the only available predictor of the synthetic phenomenon we are dealing with.  
+Far from being *that* obvious, this allows us to preliminarily state that what we are trying to accomplish is *a posteriori* (information-theoretically) the most efficient fitting procedure to predict the expected count numbers from the only available predictor ($x$) of the synthetic phenomenon we are dealing with.  
 
 A more precise consistency check involves the analysis of the *standard error* estimates (obtained by the means of the integrated fitting routine $\mathsf{glm}$) and *approximated-normal confidence intervals* obtained via *profile likelihood estimation* thanks to the `MASS::confint()` function.
 
-As we can see from the results shown above, the estimated coefficients are always included in the $95\%$ symmetric C.I.s around the estimate. This is also true for the $\text{estimate}\ \pm\ SE$ interval for the slope coefficient and sometimes also for the intercept. In cases it is not, anyway, the difference is always of minor entity.  
+As we can see from the results shown above, the estimated coefficients are always included in the $95\%$ symmetric C.I.s around the estimate. This is also true for the $\text{estimate}\ \pm\ SE$ interval for the slope coefficient and sometimes also for the intercept. In cases the latter is not, anyway, the difference is always of minor entity (and concern).  
 
 To analyze the robustness of the fitted model for $x \rightarrow +\infty$ (i.e. *future values*) it is possible to study the (estimated) rate $\hat{\lambda}$ of the (estimated) Poisson distribution from which we assume our counts to be sampled from.  
 
-In fact, $\hat{\lambda} = e^{\hat{a} + x\hat{b}}$ and it is sufficient to consider that $\hat{a} > 0$ and $\hat{b} < 0$. Furthermore, as $x \rightarrow +\infty, \ \hat{\lambda} \rightarrow 0$ and $E_{pois}[\text{counts}] \propto \lambda$.  
+In fact, $\hat{\lambda} = e^{\hat{a} + x\hat{b}}$, and it is sufficient to consider that $\hat{a} > 0$ and $\hat{b} < 0$ for now. Furthermore, as $x \rightarrow +\infty, \ \hat{\lambda} \rightarrow 0$ and $E_{pois}[\text{counts}] \propto \lambda$.  
 
 From that -- or also via *interval-bound propagation* -- it is possible to show that, as long as the previous inequalities hold true, the difference in predicted counts converges to zero as $x \rightarrow +\infty$ regardless of the specific value of the estimated parameters $\hat{a} > 0$ and $\hat{b} < 0$. This makes *future* estimations robust to stochastic noise.  
 
 
 (b) As far as the second phenomenon and model are concerned, the following are the similarities and differences among the *Poisson-family* and *Quasi-Poisson family* regressions.  
 
-- As expected, point-estimates for the *(quasi-)Poisson regression* coefficients are the same in both cases, since *Quasi-Poisson* regression model is the *quasi-likelihood* model associated to the *Poisson* one with non-locked dispersion;
+- As expected, point-estimates for the *(quasi-)Poisson regression* coefficients are the same in both cases, since *Quasi-Poisson* regression model is the *quasi-likelihood* model associated to the *Poisson* one, with non-locked dispersion;
 
 - Both the confidence intervals and the standard errors shown for the *Quasi-Poisson* model are broader w.r.t. the *Poisson* ones;
 
