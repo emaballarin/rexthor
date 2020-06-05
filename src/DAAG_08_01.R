@@ -31,8 +31,3 @@ synthdata$yes_probab = predict(fit_out, newdata = synthdata, type="response")
 
 plot(yes_probab~conc)
 lines(yes_probab~conc, synthdata)
-
-
-# This is the best we can do, probably... observation noise seems too high!
-
-summary(fit_out)

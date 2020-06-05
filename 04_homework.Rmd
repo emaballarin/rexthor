@@ -77,7 +77,8 @@ In fact, considering for the moment *Model 1*:
 - From the *Residuals vs Fitted* graph, it appears clearly that tracks *Seven Sevens* and *Annalong Horseshoe* have both highest residuals (though of opposite sign) and highest fitted values. This evidence of heteroscedasticity is further confirmed by the *Scale-Location* plot.  
 - From the *Residuals vs Leverage* plot we know that the *Seven Sevens* track is also a potential influential point. Such findings, together with the observation that *Seven Sevens* is the only point in the dataset with such comparably high fitted value from the model, make it a highly likely *over*-influential point for the fitted model.
 
-Now, looking at *Model 2* diagnostic plots, we can see that:  
+Now, looking at *Model 2* diagnostic plots, we can see that:
+
 - The *Seven Sevens* track has become one of the datapoints with the smallest residuals, but with a fitted value comparable with that previously obtained.  
 - Such datapoint still exhibits high leverage and uniqueness among the datapoints with such high fitted value: it is still a candidate to be an *over*-influential point.  
 
@@ -116,7 +117,8 @@ head(DAAG::litters)
 plot(DAAG::litters)   # Some linters may complain: that's fine.
 ```
 
-From this basic plot we can immediately tell that  
+From this basic plot we can immediately tell that:
+
 - `brainwt` is positively correlated to `bodywt` and negatively correlated to `lsize`, although the correlation appears to be very noisy;  
 - There's a significant negative correlation between `bodywt` and `lsize`;
 
@@ -224,11 +226,11 @@ We can see from the graph that the bootstrap CI is slightly asymmetric, but once
 ## Exercise 10
 
 ### Text
-The data frame table.b3 in the MPV package contains data on gas mileage and $11$ other variables for a sample of $32$ automobiles.
+The dataframe $\mathsf{table.b3}$ in the $\mathsf{MPV}$ package contains data on gas mileage and $11$ other variables for a sample of $32$ automobiles.
 
-### Question a
+### Question: *a*
 
-Construct a scatterplot of y (mpg) versus x1 (displacement). Is the relationship between these variables non-linear?
+Construct a scatterplot of $y$ ($\mathsf{mpg}$) versus `x1` ($\mathsf{displacement}$). Is the relationship between these variables *non-linear*?
 
 #### Solution
 
@@ -247,98 +249,211 @@ plot_fit <- function(fitted_model, x, y, xlab, subtitle){
 ```{r daag06_10a, code = readLines("src/DAAG_06_10_A.R"), echo=TRUE}
 ```
 
-just by looking on the scatter plot we may suppose a non linear relationship between the output y and the predictor x1: these variables seem to be negative related (as x1 increase, y decrease) according to a convex smoothed curve. We may consider some possible transformation.
+Just by looking at the scatterplot, we can notice a *non-linear* relationship between the response $y$ and the predictor `x1`: these variables seem to be negatively correlated (i.e., as `x1` increases, $y$ decreases), laying approximately on a convex smooth curve. We may consider some possible transformation to the data in order to re-linearize their relationship.  
 
-Not strange points are (yet) detected.
+No *strange* points are (yet) detected.
 
-### Question b
+### Question: *b*
 
-Use the xyplot() function, and x11 (type of transmission) as a group variable. Is a linear model reasonable for these data?
+Use the `xyplot()` function, and `x1` (type of transmission) as a group variable. Is a linear model reasonable for these data?
 
 #### Solution
 
 ```{r daag06_10b, code = readLines("src/DAAG_06_10_B.R"), echo=TRUE}
 ```
 
-just by looking on the plot, we may suppose that the data might be well divided according to the trasmission method (column x11), in fact the observation belonging to $x11 = 0$ are in the x1 range $[100, 200]$. While, the others belong to the range $[200, 500]$. Even if the dataset is splitted in two subset, the kind of relationship between y and x1 is still visible, but this time we may assume a strongest relation among data for the group $x1 = 0$  than the other group.
+Just by looking at the plot, we can notice that the data might be adequately partitioned according to the *trasmission method* (predictor `x1`) in order to subsequently fit two separate linear models. In fact, the observations belonging to `x_11 = 0` are located in the `x1` range $[100, 200]$, whereas the others in $[200, 500]$. Additionally, while still being noticeable a probably not-perfectly-linear relationship among the response and the `x1` predictor across both the partitions, the average slope of a hypotetical linear fit is greatly different among the two.
 
-In the end, according to the split, it is reasonable to consider the two models like a linear models.
+To conclude, after having performed the split, it is reasonable to consider the data explained by two independent LMs.
 
-Not strange points are (yet) detected for both models.
+Still, no *strange* points are (yet) detected.
 
-### Question c
+### Question: *c*
 
-Fit the model relating y to x1 and x11 which gives two lines having possibly different slopes and intercepts. Check the diagnostics. Are there any influential observations? Are there any influential outliers?
+Fit the model relating y to `x1` and `x1` which gives two lines having possibly different slopes and intercepts. Check the diagnostics. Are there any influential observations? Are there any influential outliers?
+
 
 #### Solution
 
 ```{r daag06_10c, code = readLines("src/DAAG_06_10_C.R"), echo=TRUE}
 ```
 
-According to the summary function for the group x11 = 0, we may say something: 
-* residuals: they are spreaded in a quite large range and they seem to be not so symmetrical (more concentrated on the left side of the median).
+According to the summary function for the model fitted on group `x11 = 0`, we may say that: 
 
-* x1       : the estimate is the slope of the linear regressor and it's a negative value but quite close to zero (so the slope of the line is not so marked). Moreover, the t statistic is, in module, quite small but the p-value still suggests to reject the null hypothesis against the estimate.
+- *Residuals* are spread in quite a large range and seem to be not totally symmetrical (mostly clumped on the left side of the median).
 
-* R^2 adj  : the variability of the model is explained with the 67% just by considering the x1 predictor, we may do better by looking on other predictors.
+- W.r.t. `x1`, the estimate (i.e. the slope of the linear regressor) has a negative value, but quite close to zero. Moreover, the *t statistic* is, in absolute value, quite small but still statistically significant.
 
-* F-stat   : it's value is not so far from 1 but the p-value suggests us to reject the null hypothesis against all the coefficients estimated (without considering the intercept).
+- W.r.t. the *adjusted* $R^2$, the variability of the model is explained at 67% just by considering the `x1` predictor. As expected, additional predictors further reduce the unexplained variance.
 
-In conclusion, we may accept this simple linear regressor, but taking into account that it does not be able to explain very well the model.
+- W.r.t. the *F-statistic*, its value is not far from $1$. In any case, its statistical significance suggests us to reject the null hypothesis against the statistical irrelevance of all estimated coefficients, intercept excluded.
 
-While for the group x11 = 1 we have the following observations:
+In conclusion, we may accept this simple linear model, but taking into account that it may not be able to explain completely the data.
 
-* residuals: they are spreaded in a resonable range and they seem to be symmetrical.
 
-* x1       : the estimate is the slope of the linear regressor and it's a negative value but quite close to zero (so the slope of the line is not so marked). Moreover, the t statistic is, in module,  quite small but the p-value still suggests to reject the null hypothesis against the estimate.
+For what concerns the data partition `x11 = 1` we can make the following observations:
 
-* R^2 adj  : the variability of the model is explained with the 58% just by considering the x1 predictor, we may do better by looking on other predictors.
+- *Residuals* are spread in a reasonably compact range, and seem to be symmetrical around the median.
 
-* F-stat   : it's value is not so far from 1 but the p-value suggests us to reject the null hypothesis against all the coefficients estimated (without considering the intercept).
+- W.r.t. `x1`, the estimate (i.e. the slope of the linear regressor) has a negative value, but quite close to zero. Moreover, the *t statistic* is, in absolute value, quite small but still statistically significant.
 
-In conclusion, we may accept this simple linear regressor, but taking into account that it does not be able to explain very well the model.
+- W.r.t. the *adjusted* $R^2$, the variability of the model is explained at 58% just by considering the `x1` predictor. As expected, additional predictors further reduce the unexplained variance.
 
-For what concern the residuals for the fitted models we may say something more, in particular for group x11 = 0:
+- W.r.t. the *F-statistic*, its value is not far from $1$. In any case, its statistical significance suggests us to reject the null hypothesis against the statistical irrelevance of all estimated coefficients, intercept excluded.
 
-* residual vs fitted: the plot suggest us a kind of pattern among the residuals but the observation used to fit the model are not so much and they look quite spread, so we cannot infere on the non-linear relationship among the residuals of the model.
+In conclusion, we may accept this simple linear model, but taking into account that it may not be able to explain completely the data.
 
-* qq plot           : the residuals seem to be normal distributed even if the point 12 is much far from the straight line (could be an outlier or a point with high level of information).
 
-* scale-location    : the red line suggests us homoscedasticity for the residuals but, inasmuch the number of observations is small, we cannot accept the homoscedasticity.
+For what concerns the *residuals* for the fitted models we may say something more by looking at the proper *diagnostic plots*, especially for group `x11 = 0`:
 
-* residual vs lvg   : the point 5 is in the critical region of the plot and it means that it has a strong influence on the model, so it could be an outlier or an influencer. 
+- **Residuals vs fitted**: the plot suggests us a weak pattern among the residuals, but they look quite spread. For that reason we cannot intuitively infer the hypotetical non-linear relationship among them to correct the model via data-transformation.
 
-The point 5 seems to be both an outlier and an influencer because its cook distance is very large, moreover its residual is significantly far from zero respect all the others, and in the end it is the only point fitted in the first portion of the model and this fact associates a certain relevance to this point.
+- **QQ-plot**: the residuals seem to be normally-distributed, even if *point 12* is far from the straight theoretical line: it could be an outlier or a point carrying a large amount of information still unexplained by the model.
 
-While for the group x11 = 1:
+- **Scale-location**: the trend-line suggests us the lack of significant heteroscedasticity. However, inasmuch the number of observations is small, we blindly accept such result; it is unlikely, however, that this may corrupt the efficacy of our model.
 
-* residual vs fitted: the plot suggest no clear pattern among the residuals, and we may suppose a non-linear relationship on the residuals.
+- **Residuals vs leverage**: *point 5* shows a relevant Cook distance from zero, meaning that it has a strong influence on the model. It could be an outlier or an influential point (or both). 
 
-* qq plot           : the residuals seem to be not so much normal distributed just by looking on the point outside the range [-1, 1], so the normality assumption is quite weak.
+Upon further inspection, we can say that *point 5* seems to be both an outlier and an influential observation because -- additionally -- its residual is significantly large compared to the others, and it is the only point located in that portion of the `x1` domain.
 
-* scale-location    : the red line suggests us homoskedasticity for the residuals that might be correct, and we may accept it.
 
-* residual vs lvg   : no one points is in the critical region, even if the point 17  is close to the borderline, it could be a very influence point.
+Similarly, for the group `x11 = 1`:
 
-### Question d
+- **Residuals vs fitted**: the plot suggests us no clear relationship among the residuals. For that reason we cannot intuitively infer a hypotetical non-linear relationship among them to correct the model via data-transformation.
 
-Plot the residuals against the variable x7 (number of transmission speeds), again using x11 as a group variable. Is there anything striking about this plot?
+- **QQ-plot**: the residuals seem to be not-clearly-normally-distributed, especially for what concerns the point outside the $[-1, 1]$ range. Normality assumption is quite weakly verified.
+
+- **Scale-location**: the trend-line suggests us the lack of significant heteroscedasticity.
+
+- **Residuals vs leverage**: no point has a Cook distance greater than $1$ from $0$, even if the point $17$  is close to the boundary.
+
+
+### Question: *d*
+
+Plot the residuals against the variable `x7` (number of transmission speeds), again using `x1` as a group variable. Is there anything striking about this plot?
 
 #### Solution
 
 ```{r daag06_10d, code = readLines("src/DAAG_06_10_D.R"), echo=TRUE}
 ```
 
-The residual plot for the group x11 = 0 shows us that the points are  spread just on three values of x7 (integer values) and seem doesn't  exist a clear pattern among them.
+The *residual plot* for the group `x11 = 0` shows us that the points are spread just over three different integer values of `x7` and doesn't  seem to exist a clear relationsip among their relative abundance.
 
-While in the residual plot for the group x11 = 1, the points are all  distributed on the single value of x7, so it might suggest that x7 is not a suitable predictor for our model because we have multiple output for the same value of x7: we may discard it.
+Considering the residual plot for the group `x11 = 1`, all points are located at a single value for `x7`, suggesting that `x7` is not a suitable predictor at all for our model and making pratically inapplicable any statistical tool in such regard. In the building of a model for such data, it can be safely discarded as useless.
+
 
 ## Exercise 11
 
 ### Text
 
+The following code is designed to explore effects that can result from the omission of *explanatory
+variables* among the predictors for a model:
+
+```{r andre_0}
+library(lattice)
+library(DAAG)
+
+set.seed(42)
+
+x1 <- runif(10)           # predictor which will be missing
+x2 <- rbinom(10, 1, 1-x1) # observed predictor which depends on missing predictor
+
+y <- 5*x1 + x2 + rnorm(10,sd=.1) # simulated model; coef of x2 is positive
+
+y.lm <- lm(y ~ factor(x2)) # model fitted to observed data
+coef(y.lm)
+
+# effect of missing variable:
+
+y.lm2 <- lm(y ~ x1 + factor(x2)) # coefficient of x2 has wrong sign
+coef(y.lm2)                      # correct model
+```
+
+What happens if `x2` is generated according to `x2 <- rbinom(10, 1, x1)`?
+What happens if `x2` is generated according to `x2 <- rbinom(10, 1, .5)`?
+
 ### Solution
-<!-- ANDREA! -->
+
+First of all, theoretically speaking, if we consider only the $x_{2}$ predictor for the explanation of the response variable $y$, we get that $e=y-y_{estimated}=5\times x_{1} + v$ where $x_{1} \thicksim U(0,1)$ and $v \thicksim \mathcal{N}(0, 0.01)$.   
+We can deduce that the expected value $E(e) \neq 0$ and, as matter of fact, the invalidation of the *zero-mean hypothesis* for the stochastic component may cause the model to be biased.
+
+```{r andre_1}
+x2_1 <- rbinom(10, 1, x1)
+y_1 <- 5*x1 + x2_1 + rnorm(10,sd=.1)
+y_1.lm <- lm(y_1 ~ factor(x2_1)) # model fitted to observed data
+```
+
+```{r andre_2}
+y_1.lm2 <- lm(y_1 ~ x1 + factor(x2_1))
+```
+
+```{r andre_3}
+x2_2 <- rbinom(10, 1, .5)
+y_2 <- 5*x1 + x2_2 + rnorm(10,sd=.1)
+y_2.lm <- lm(y_2 ~ factor(x2_2)) # model fitted to observed data
+```
+
+```{r andre_4}
+y_2.lm2 <- lm(y_2~ x1 + factor(x2_2))
+```
+
+
+```{r andre_6}
+anova(y.lm,y.lm2)
+anova(y_1.lm,y_1.lm2)
+anova(y_2.lm,y_2.lm2)
+```
+
+By *ANOVA*-testing, we can notice a difference in term of unexplained *RSS* between the *one-variable* model (`x2`-only) and the *two-variables* model, as theoretically expected. However, the $F$-score significance of the `x1` predictor in the *two-variables* model -- much higher than that of the *one-variable* one shows us that the addition of `x1` to `x2` among the predictors reduced overall unexplained variance much better than the addition of `x2` alone over the *intercept-only* model. This is further confirmed by looking at the spread of partial residuals around their mean for the *one-variable* model vs the *two-variables* model w.r.t. `x2`.
+
+
+```{r andre_7}
+cor(x1,x2)    # negative correlation
+coef(y.lm)
+coef(y.lm2)
+
+cor(x1,x2_1)  # positive correlation
+coef(y_1.lm)
+coef(y_1.lm2)
+
+cor(x1,x2_2)  # almost zero correlation
+coef(y_2.lm)
+coef(y_2.lm2)
+
+```
+
+After a deeper analysis of the slope coefficient for the `x2` predictor w.r.t. its correlation with `x1`, we get that the sign of the correlation dominates that of the *original* generative process in such cases in which correlation among predictors is significant (1st, 2nd) and the most explanatory variable is omitted (`x2`-only models).  
+
+In cases with the same generative process, but both variables present among the chosen predictors, this is generally no longer always true and signs are determined in good agreement with the *original* generative model.  
+
+In the third case, lack of significant correlation among the two predictors, and the peculiar generative process, makes the specific determination of the sign of the slope for `x2` dominated by random noise. Additionally, such coefficients do not differ much among the *one-* and the *two-* variable models. This last observation is further put in evidence by the last (3rd) row of partial residual plots. Indeed, we can see that there is no significant difference in the mean of the partial residuals around `x2` between the full and the censored model.
+
+```{r andre_8}
+par(mfrow=c(1,3))
+termplot(y.lm, partial.resid=TRUE, smooth=panel.smooth,
+         col.res="gray30",main = "y ~ factor(x2)", ylim = c(-3,2))
+termplot(y.lm2, partial.resid=TRUE, smooth=panel.smooth,
+         col.res="gray30",main = "y ~ x1 + factor(x2)",ylim = c(-3,2))
+```
+
+```{r andre_9}
+par(mfrow=c(1,3))
+termplot(y_1.lm, partial.resid=TRUE, smooth=panel.smooth,
+         col.res="blue",main = "y_1 ~ factor(x2_1)",ylim = c(-3,2))
+termplot(y_1.lm2, partial.resid=TRUE, smooth=panel.smooth,
+         col.res="blue",main = "y_1 ~ x1 + factor(x2_1)",ylim = c(-3,2))
+
+```
+
+```{r andre_10}
+par(mfrow=c(1,3))
+termplot(y_2.lm, partial.resid=TRUE, smooth=panel.smooth,
+         col.res="green",main = "y_2 ~ factor(x2_2)",ylim = c(-3,2))
+
+termplot(y_2.lm2, partial.resid=TRUE, smooth=panel.smooth,
+         col.res="green",main = "y ~ x1_2 + factor(x2_2)",ylim = c(-3,2))
+```
+
 
 # Exercises from *DAAG, Chapter 8* 
 
@@ -356,9 +471,9 @@ Use logistic regression to model the probability of inhibition as a function of 
 
 ### Comments
 
-Following an *orthodox interpretation* of the exercise text, we are required to fit a *logistic model* that tries to explain or peredict the probability of inhibition as a function of concentration -- assming that the counts shown in the datatable refer to different, independent $120\text{s}$-long observations.  
+Following an *orthodox interpretation* of the exercise text, we are required to fit a *logistic model* that tries to explain or predict the probability of inhibition as a function of concentration -- assuming that the counts shown in the datatable refer to different, independent $120\text{s}$-long observations.  
 
-Upon visual analysis of the scatterplot of the data, it appears that a global trend in the data is hard to be noticed -- or anyway extremely difficult to model in functional form --, and both *up-* and *down-**swinging* trends are present as the concentration increases (apart from the last point, which is the highest in probability of the whole dataset).  
+Upon visual analysis of the scatterplot of the data, it appears that a global trend in the data is hard to be noticed -- or anyway extremely difficult to model in functional form --, and both *up-* and *down-swinging* trends are present as the concentration increases (apart from the last point, which is the highest in probability of the whole dataset).  
 
 The best we can do in this case is to fit a *logistic regression* model on untransformed data, directly for the continuous variable that computes the probability of inhibition, using the total number of *yes/no* observations per concentration as logistic regression weights.  
 
@@ -369,7 +484,7 @@ The result is acceptable, but still corrupted by noise.
 
 ### Text
 
-In the data set (an artificial one of 3121 patients, that is similar to a subset of the data analyzed in Stiell et al., 2001) minor.head.injury, obtain a logistic regression model relating clinically.important.brain.injury to other variables. Patients whose risk is sufficiently high will be sent for CT (computed tomography). Using a risk threshold of 0.025 (2.5%), turn the result into a decision rule for use of CT.
+In the dataset (an artificial one of $3121$ patients, that is similar to a subset of the data analyzed in *Stiell et al., 2001*) `minor.head.injury`, obtain a *logistic regression model* relating `clinically.important.brain.injury` to the other variables. Patients whose risk is sufficiently high will be sent for CT. Using a risk threshold of $0.025$ ($2.5\%$), turn the result into a decision rule for use of CT.
 
 ### Solution
 
@@ -378,17 +493,31 @@ In the data set (an artificial one of 3121 patients, that is similar to a subset
 
 ### Comments
 
-Almost all of the independent variables are highly significant according to the p-values and the more effective variables have an impact on the output of two times the assumed value of the variable itself (i.e. betahat_i is approximately equals to 2, than y_i = …+ 2 * x_i + …).
+Almost all of the variables used as predictors are highly significant according to their *coefficient p-values*, with -- in any case -- some differences w.r.t. their overall relevance for the final result.
 
-The difference between Null model and the current one is quite large so it’s good, in fact 1 - pchisq(1741.6 - 1201.3, 3120 - 3110) = 0 and it means there is evidence against the null hypothesis i.e. to pick the model with just a constant value.
+The difference between the *null model* and the *full* one is large, positively suggesting its effective use.
 
-In the end, it is provided a clear table to summarize the estimated coefficients and the patients information; in addition, another table is provided to show the risk level for each patients and if it is a good idea to sent them for a computed tomography check (CT).
+Finally, a table is provided to summarize the estimated coefficients and the patient information; additionally, another table is provided to compare symptoms, risk level for each patient, and the model-predicted decision whether to sent them for a CT check.  
+
+In order to *operationalize* such model and provide a simple decision rule for *emergency unit* responders, it is possible to transform the *logistic model* in a *linearly-predicted logit model* operating at fixed probability cutoff.  
+
+Since all the predictors are binary variables carrying information about the presence ($1$) or not ($0$) of a given symptom, it is possible to assign to each symptom a *score* corresponding to their model *multiplicative coefficient*. Finally, the *ER* unit workers just need to sum all the symptom scores according to their presence in a given patient showing the hospital. 
+
+If the overall sum exceeds a precomputed threshold, the patient needs to be sent to CT.  
+
+Such threshold $T_p$ depends on the risk cutoff $p$ in that:
+$$
+T_p = \text{logit}(p) \ - \ \text{model intercept} \ = \ \text{log}\left(\frac{p}{1-p}\right) - \ \text{model intercept}
+$$  
+
+For our model, at $p = 0.025$, $T_p = 4.4972 - 3.6635 = 0.8337$. Coefficients are shown in the tables adove.
 
 ## Exercise 3
 
 ### Text
 
-Consider again the $\mathsf{moths}$ dataset of *Section 8.4*.  
+Consider again the $\mathsf{moths}$ dataset of *Section 8.4*.
+
 (a) What happens to the standard error estimates when the *Poisson* family is used in $\mathsf{glm()}$ instead of the *Quasi-Poisson* family?  
 (b) Analyze the *P moths*, in the same way as the *A moths* were analyzed. Comment on the effect of transect length.  
 
@@ -401,7 +530,9 @@ Consider again the $\mathsf{moths}$ dataset of *Section 8.4*.
 
 (a) As we can see from the printed results -- and as also noted in *Exercise DAAG 8.6* -- standard error intervals estimated from a *Poisson regression* model are narrower w.r.t. *Quasi-Poisson* ones. This can be explained as a positive dispersion coefficient (like the one estimated in this case for the *quasi-Poisson* model) inflates error bounds.
 
-(b) By omitting the portions of data analysis directly determined by the observed $0$-count for the *Bank* habitat (in the case of *A moths*), the analysis is compact and contained in the code snipped above.  
+(b) [*paragraphs that follow*]  
+
+By omitting the portions of data analysis directly determined by the observed $0$-count for the *Bank* habitat (in the case of *A moths*), the analysis is compact and contained in the code snipped above.  
 
 With a difference w.r.t. the analysis shown in the book, the reference level among different habitats has been chosen in order to maximize overall significance for the coefficients in the linear model contained in the *(quasi-)Poisson* one. Since no clear dominance exists in such choice, the closest to Pareto-front has been chosen (symplex-area method). Regardless of such criterion, all observations contained in the following are invariant to such choice.  
 
@@ -427,7 +558,9 @@ Fit a Poisson regression model to these data, and compare the estimated coeffici
 
 ### Comments
 
-(a) Preliminarily to a more *in-depth* analysis, it is worth noting that -- w.r.t. to the point we are currently answering to -- we are performing a *Poisson regression* fit to data generated according to a *Poisson regression* generative model.  
+(a) [*paragraphs that follow*]  
+
+Preliminarily to a more *in-depth* analysis, it is worth noting that -- w.r.t. to the point we are currently answering to -- we are performing a *Poisson regression* fit to data generated according to a *Poisson regression* generative model.  
 
 Far from being *that* obvious, this allows us to preliminarily state that what we are trying to accomplish is *a posteriori* (information-theoretically) the most efficient fitting procedure to predict the expected count numbers from the only available predictor ($x$) of the synthetic phenomenon we are dealing with.  
 
@@ -442,7 +575,9 @@ In fact, $\hat{\lambda} = e^{\hat{a} + x\hat{b}}$, and it is sufficient to consi
 From that -- or also via *interval-bound propagation* -- it is possible to show that, as long as the previous inequalities hold true, the difference in predicted counts converges to zero as $x \rightarrow +\infty$ regardless of the specific value of the estimated parameters $\hat{a} > 0$ and $\hat{b} < 0$. This makes *future* estimations robust to stochastic noise.  
 
 
-(b) As far as the second phenomenon and model are concerned, the following are the similarities and differences among the *Poisson-family* and *Quasi-Poisson family* regressions.  
+(b) [*paragraphs that follow*]  
+
+As far as the second phenomenon and model are concerned, the following are the similarities and differences among the *Poisson-family* and *Quasi-Poisson family* regressions.  
 
 - As expected, point-estimates for the *(quasi-)Poisson regression* coefficients are the same in both cases, since *Quasi-Poisson* regression model is the *quasi-likelihood* model associated to the *Poisson* one, with non-locked dispersion;
 
